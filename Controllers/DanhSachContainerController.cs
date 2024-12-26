@@ -12,17 +12,17 @@ namespace ProjectTest.Controllers
     [ApiController]
     public class DanhSachContainerController : ControllerBase
     {
-        private readonly Interface.IServiceContainer serviceContainer;
+        private readonly Interface.IServiceContainer _serviceContainer;
 
         public DanhSachContainerController(Interface.IServiceContainer serviceContainer)
         {
-            this.serviceContainer = serviceContainer;
+            _serviceContainer = serviceContainer;
         }
 
         [HttpGet("GetDanhSachContainer")]
         public async Task<ActionResult> getDanhSachContainer()
         {
-            var dsCcontainers = await serviceContainer.GetDanhSachContainerAsync();
+            var dsCcontainers = await _serviceContainer.GetDanhSachContainerAsync();
             return Ok(dsCcontainers);
         }
 
@@ -30,7 +30,7 @@ namespace ProjectTest.Controllers
         [HttpGet("GetChiTietContainer/{id}/{ngayDoiViTri}")]
         public ActionResult getThongTinContainer(int id, DateTime ngayDoiViTri)
         {
-            var thongTinCoBan = serviceContainer.GetDetailContainer(id,ngayDoiViTri);
+            var thongTinCoBan = _serviceContainer.GetDetailContainer(id,ngayDoiViTri);
             return Ok(thongTinCoBan);
         }
 
@@ -38,7 +38,7 @@ namespace ProjectTest.Controllers
         [HttpGet("getLoaiContainer")]
         public ActionResult getLoaiContainer()
         {
-            var dsLoaiContainer = serviceContainer.GetLoaiContainer();
+            var dsLoaiContainer = _serviceContainer.GetLoaiContainer();
             return Ok(dsLoaiContainer);
         }
     }
