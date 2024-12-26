@@ -36,10 +36,10 @@ namespace ProjectTest.Service
 
             if (thongTinCoBan.MaPhieuXuat != null)
             {
-                var phieuXuat = _context.ContainerExitForms.Where(p => p.MaPhieuXuat == thongTinCoBan.MaPhieuXuat).FirstOrDefault();
-                if(phieuXuat != null)
+                var exitForm = _context.ContainerExitForms.Where(p => p.MaPhieuXuat == thongTinCoBan.MaPhieuXuat).FirstOrDefault();
+                if(exitForm != null)
                 {
-                    donViXuat = phieuXuat.DonViVanChuyen;
+                    donViXuat = exitForm.DonViVanChuyen;
                 }                
             }
             var phieuNhap = _context.ContainerEntryForms.Where(p => p.Id == id).FirstOrDefault();
@@ -161,11 +161,11 @@ namespace ProjectTest.Service
         {
             TinhToanViTriContainer _toanViTriContainer = new TinhToanViTriContainer();
             // ktra phieu nhap
-            var phieuNhap = _context.ContainerEntryForms.Where(p => p.MaPhieuNhap == maPhieuNhap).FirstOrDefault();
+            var entryForm = _context.ContainerEntryForms.Where(p => p.MaPhieuNhap == maPhieuNhap).FirstOrDefault();
 
-            if (phieuNhap == null)
+            if (entryForm == null)
                 throw new Exception("Phiếu nhập không tồn tại.");
-            var container = _context.Containers.Where(p => p.Id == phieuNhap.Id).FirstOrDefault();
+            var container = _context.Containers.Where(p => p.Id == entryForm.Id).FirstOrDefault();
 
             if (container == null)
                 throw new Exception("Container không tồn tại.");
@@ -193,10 +193,10 @@ namespace ProjectTest.Service
 
                 _context.ContainerDetails.Add(ct_Container);
             }
-            phieuNhap.TrangThaiDuyet = trangThai;
+            entryForm.TrangThaiDuyet = trangThai;
 
             _context.SaveChanges();
-            return (phieuNhap);
+            return (entryForm);
         }
 
         public Container CreateContainer(string maContainer,string maIso,string idUser, string maLoai,int maxWeight, int tareWeight,string numContainer, int size, DateTime ngaySanXuat)
@@ -241,7 +241,7 @@ namespace ProjectTest.Service
             }
             ////////////////////////////
             string maPhieuNhap = idUser + _context.ContainerEntryForms.Count();
-            ContainerEntryForm phieuNhap = new ContainerEntryForm
+            ContainerEntryForm entryForm = new ContainerEntryForm
             {
                 MaPhieuNhap = maPhieuNhap,
                 Id = idContainer + 1,
@@ -256,57 +256,57 @@ namespace ProjectTest.Service
    
             _context.Containers.Add(container);
 
-            _context.ContainerEntryForms.Add(phieuNhap);
+            _context.ContainerEntryForms.Add(entryForm);
 
             _context.SaveChanges();
 
-            return phieuNhap;
+            return entryForm;
         }
 
         //***********************************PHIEUXUAT******************************************
         public async Task<List<ContainerExitFormListDto>> GetDanhSachPhieuXuatDtos(string idUser)
         {
-            var danhSachPhieuXuat = await _context.Set<ContainerExitFormListDto>()
+            var exitFormList = await _context.Set<ContainerExitFormListDto>()
                                    .FromSqlRaw("exec DANHSACHPHIEUXUAT @maUser ={0}", idUser)
                                    .ToListAsync();
-            return danhSachPhieuXuat;
+            return exitFormList;
         }
 
-        public async Task<List<ContainerListExitDto>> GetDetailPhieuXuatDtos(string maphieu)
+        public async Task<List<ContainerListExitDto>> GetDetailPhieuXuatDtos(string maPhieu)
         {
-            var danhSachContainerXuat = await _context.Set<ContainerListExitDto>()
-                                                .FromSqlRaw("exec DanhSachContainerPhieuXuat @maPhieu = {0}", maphieu)
+            var containerExitList = await _context.Set<ContainerListExitDto>()
+                                                .FromSqlRaw("exec DanhSachContainerPhieuXuat @maPhieu = {0}", maPhieu)
                                                 .ToListAsync();
-            return danhSachContainerXuat;
+            return containerExitList;
         }
 
-        public ContainerExitForm UpdateTrangThaiPhieuXuat(string maphieu, int TRANGTHAIDUYET)
+        public ContainerExitForm UpdateTrangThaiPhieuXuat(string maPhieu, int trangThaiDuyet)
         {
-            var danhSach = _context.ContainerExitForms.Where(p => p.MaPhieuXuat == maphieu).FirstOrDefault();
-            if (danhSach == null)
+            var exitFormList = _context.ContainerExitForms.Where(p => p.MaPhieuXuat == maPhieu).FirstOrDefault();
+            if (exitFormList == null)
                 throw new Exception("Phiếu xuất không tồn tại.");
 
 
-            var listDsContainerXuat = _context.Containers.Where(p => p.MaPhieuXuat == maphieu).ToList();
+            var containerExitList = _context.Containers.Where(p => p.MaPhieuXuat == maPhieu).ToList();
 
-            foreach (var s in listDsContainerXuat)
+            foreach (var s in containerExitList)
             {
                 var ct_Xuat = _context.ContainerDetails.Where(p => p.ThoiGianKetThuc == null && p.Id == s.Id).FirstOrDefault();
                 if (ct_Xuat != null)
-                    ct_Xuat.ThoiGianKetThuc = danhSach.NgayXuat;
+                    ct_Xuat.ThoiGianKetThuc = exitFormList.NgayXuat;
             }
 
-            danhSach.TrangThaiDuyet = TRANGTHAIDUYET;
+            exitFormList.TrangThaiDuyet = trangThaiDuyet;
             _context.SaveChanges();
-            return danhSach;
+            return exitFormList;
         }
 
         public async Task<List<ContainerListOfCustomerInSnpDto>> GetDsContainerCuaUserTrongCang(string idUser)
         {
-            var listContainerChuaXuat = await _context.Set<ContainerListOfCustomerInSnpDto>()
+            var listContainerInSnp = await _context.Set<ContainerListOfCustomerInSnpDto>()
                                                 .FromSqlRaw("exec DANHSACHCONTAINERCUAKHCONTON @maKH = {0}", idUser)
                                                 .ToListAsync();
-            return listContainerChuaXuat;
+            return listContainerInSnp;
         }
 
         public ContainerExitForm CreatePhieuXuat(string idUser, string idContainer, ContainerExitFormDetailDto thongTinPhieuXuat)
@@ -316,10 +316,10 @@ namespace ProjectTest.Service
 
             string[] listContainer = idContainer.Split(',');
 
-            string slgPhieuXuat = _context.ContainerExitForms.Count().ToString();
+            string ExitFormAmount = _context.ContainerExitForms.Count().ToString();
 
-            string maPhieu = idUser + slgPhieuXuat;
-            ContainerExitForm phieuXuat = new ContainerExitForm
+            string maPhieu = idUser + ExitFormAmount;
+            ContainerExitForm exitForm = new ContainerExitForm
             {
                 MaPhieuXuat = maPhieu,
                 NgayLamPhieu = DateTime.Now,
@@ -345,11 +345,11 @@ namespace ProjectTest.Service
                 }
             }
 
-            _context.ContainerExitForms.Add(phieuXuat);
+            _context.ContainerExitForms.Add(exitForm);
 
             _context.SaveChanges();
 
-            return phieuXuat;
+            return exitForm;
         }
 
 
