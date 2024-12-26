@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using ProjectTest.Interface;
 using ProjectTest.Models;
 
 namespace ProjectTest.Math
 {
-    interface I_ViTriContainer
-    {
-        string getViTriContainer(int LoaiBay, int ViTriBay, int ViTriRow, int ViTriTier);
-
-    }
+    
 
     public class TinhToanViTriContainer : I_ViTriContainer
     {
