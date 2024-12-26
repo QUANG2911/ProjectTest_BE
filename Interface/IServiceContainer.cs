@@ -20,12 +20,12 @@ namespace ProjectTest.Interface
 
         ContainerEntryForm UpdatePhieuNhap(string maPhieuNhap, int trangThai);
 
-        ViTriContainer CreateViTriContainer(int ContainerSize, int SoBay, int soRow, int soTier);
+        void CreateViTriContainer(int ContainerSize, int SoBay, int soRow, int soTier);
 
-        DetailContainer CreateCT_Container(int idViTri, int idContainer);
+        void CreateCT_Container(int idViTri, int idContainer);
 
         ContainerEntryForm CreatePhieuNhap(string idUser, ContainerEntryFormDetailDto phieuNhap);
-        Container CreateContainer(string maContainer, string maIso, string idUser, string maLoai, int maxWeight, int tareWeight, string numContainer, int size, DateTime ngaySanXuat);
+        void CreateContainer(string maContainer, string maIso, string idUser, string maLoai, int maxWeight, int tareWeight, string numContainer, int size, DateTime ngaySanXuat, DateTime ngayVanChuyenToiCang);
 
         //****************************PHIEU XUAT**********************************
         Task<List<ContainerExitFormListDto>> GetDanhSachPhieuXuatDtos(string idUser);

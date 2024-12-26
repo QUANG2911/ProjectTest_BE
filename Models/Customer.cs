@@ -16,8 +16,8 @@ namespace ProjectTest.Models
         [MaxLength(13)]
         public required string Mst { get; set; }
 
-        public ICollection<Container>? containers { get; set; }
+        public ICollection<Container>? Containers { get; set; }
 
-        public ICollection<UserAccount>? taiKhoans { get; set; }
+        public ICollection<UserAccount>? UserAccounts { get; set; }
     }
 }

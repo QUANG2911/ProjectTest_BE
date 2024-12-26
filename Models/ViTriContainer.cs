@@ -18,8 +18,8 @@ namespace ProjectTest.Models
 
         [Range(0, 1)]
         public int TrangThaiRong { get; set; }
-        public ICollection<DetailContainer>? cT_Containers { get; set; }
+        public ICollection<DetailContainer>? DetailContainers { get; set; }
         [ForeignKey("MaBlock")]
-        public Block? Block { get; set; }    
+        public Block? Blocks { get; set; }    
     }
 }

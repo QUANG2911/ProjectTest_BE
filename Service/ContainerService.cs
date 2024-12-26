@@ -121,7 +121,7 @@ namespace ProjectTest.Service
             return thongTinPhieuNhapDto;
         }
 
-        public ViTriContainer CreateViTriContainer(int ContainerSize,int SoBay, int soRow, int soTier)
+        public void CreateViTriContainer(int ContainerSize,int SoBay, int soRow, int soTier)
         {
             TinhToanViTriContainer _toanViTriContainer = new TinhToanViTriContainer();
             var viTriMax = _context.ViTriContainers.OrderByDescending(p => p.MaViTri).FirstOrDefault();
@@ -142,10 +142,11 @@ namespace ProjectTest.Service
                 SoTier = int.Parse(viTriMoi[3]),
                 TrangThaiRong = 1
             };
-            return viTri1;
+            _context.ViTriContainers.Add(viTri1);
+            _context.SaveChanges();
         }
 
-        public DetailContainer CreateCT_Container(int idViTri, int idContainer)
+        public void CreateCT_Container(int idViTri, int idContainer)
         {
             DetailContainer cT_Container = new DetailContainer
             {
@@ -154,7 +155,8 @@ namespace ProjectTest.Service
                 ThoiGianBatDau = DateTime.Today,
                 ThoiGianKetThuc = null
             };
-            return cT_Container;
+            _context.ContainerDetails.Add(cT_Container);
+            _context.SaveChanges();
         }
 
         public ContainerEntryForm UpdatePhieuNhap(string maPhieuNhap, int trangThai)
@@ -185,13 +187,9 @@ namespace ProjectTest.Service
                     soRow = viTriMax.SoRow;
                     soTier = viTriMax.SoTier;
                 }    
-                var viTri = CreateViTriContainer(container.Size, soBay, soRow, soTier);
+                CreateViTriContainer(container.Size, soBay, soRow, soTier);
 
-                var ct_Container = CreateCT_Container(maViTri, container.Id);
-                // luu database
-                _context.ViTriContainers.Add(viTri);
-
-                _context.ContainerDetails.Add(ct_Container);
+                CreateCT_Container(maViTri, container.Id);              
             }
             entryForm.TrangThaiDuyet = trangThai;
 
@@ -199,8 +197,25 @@ namespace ProjectTest.Service
             return (entryForm);
         }
 
-        public Container CreateContainer(string maContainer,string maIso,string idUser, string maLoai,int maxWeight, int tareWeight,string numContainer, int size, DateTime ngaySanXuat)
+        public void CreateContainer(string maContainer,string maIso,string idUser, string maLoai,int maxWeight, int tareWeight,string numContainer, int size, DateTime ngaySanXuat, DateTime ngayVanChuyenToiCang)
         {
+            ///Ktra container trong Cang
+            var checkContainer = _context.Containers.Where(p => p.NumContainer == numContainer).FirstOrDefault();
+
+            if (checkContainer != null && checkContainer.MaPhieuXuat != null)
+            {
+                var checkPhieuXuat = _context.ContainerExitForms.Where(p => p.MaPhieuXuat == checkContainer.MaPhieuXuat).FirstOrDefault();
+                if (checkPhieuXuat != null && checkPhieuXuat.NgayXuat >= ngayVanChuyenToiCang)
+                {
+                    throw new Exception("Container này hiện chưa xuất cảng, không thể làm phiếu nhập cho nó.");
+                }
+            }
+            else if (checkContainer != null && checkContainer.MaPhieuXuat == null)
+            {
+                throw new Exception("Container này hiện chưa có phiếu xuất,đang tồn tại trong cảng và không thể làm phiếu nhập cho nó.");
+            }
+            ////////////////////////////
+            ///
             Container container = new Container
             {
                 MaContainer = maContainer,
@@ -213,7 +228,8 @@ namespace ProjectTest.Service
                 Size = size,
                 NgaySanXuat = ngaySanXuat
             };
-            return container;
+            _context.Containers.Add(container);
+            _context.SaveChanges();
         }
 
         public ContainerEntryForm CreatePhieuNhap(string idUser, ContainerEntryFormDetailDto thongTinPhieuNhapDto)
@@ -224,22 +240,8 @@ namespace ProjectTest.Service
                 idContainer = getMacontainer.Id;
             string maContainer = idUser + thongTinPhieuNhapDto.LoaiContainer + thongTinPhieuNhapDto.NumContainer;
 
-            ///Ktra container trong Cang
-            var checkContainer = _context.Containers.Where(p => p.NumContainer == thongTinPhieuNhapDto.NumContainer).FirstOrDefault();
+            CreateContainer(maContainer, thongTinPhieuNhapDto.MaIso, idUser, thongTinPhieuNhapDto.LoaiContainer, thongTinPhieuNhapDto.TongTrongLuong, thongTinPhieuNhapDto.TongTrongLuong, thongTinPhieuNhapDto.NumContainer, thongTinPhieuNhapDto.size, thongTinPhieuNhapDto.NgaySanXuat, thongTinPhieuNhapDto.NgayVanChuyenToiCang);
 
-            if (checkContainer != null && checkContainer.MaPhieuXuat != null)
-            {
-                var checkPhieuXuat = _context.ContainerExitForms.Where(p => p.MaPhieuXuat == checkContainer.MaPhieuXuat).FirstOrDefault();
-                if( checkPhieuXuat != null && checkPhieuXuat.NgayXuat >= thongTinPhieuNhapDto.NgayVanChuyenToiCang)
-                {
-                    throw new Exception("Container này hiện chưa xuất cảng, không thể làm phiếu nhập cho nó.");
-                }    
-            }
-            else if (checkContainer != null && checkContainer.MaPhieuXuat == null)
-            {
-                throw new Exception("Container này hiện chưa có phiếu xuất,đang tồn tại trong cảng và không thể làm phiếu nhập cho nó.");
-            }
-            ////////////////////////////
             string maPhieuNhap = idUser + _context.ContainerEntryForms.Count();
             ContainerEntryForm entryForm = new ContainerEntryForm
             {
@@ -251,10 +253,6 @@ namespace ProjectTest.Service
                 NgayGiaoContainer = thongTinPhieuNhapDto.NgayVanChuyenToiCang,
                 TrangThaiDuyet = 0
             };
-
-            Container container = CreateContainer(maContainer, thongTinPhieuNhapDto.MaIso, idUser, thongTinPhieuNhapDto.LoaiContainer, thongTinPhieuNhapDto.TongTrongLuong, thongTinPhieuNhapDto.TongTrongLuong, thongTinPhieuNhapDto.NumContainer, thongTinPhieuNhapDto.size, thongTinPhieuNhapDto.NgaySanXuat);
-   
-            _context.Containers.Add(container);
 
             _context.ContainerEntryForms.Add(entryForm);
 

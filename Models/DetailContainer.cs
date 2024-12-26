@@ -19,7 +19,7 @@ namespace ProjectTest.Models
         [ForeignKey("Id")]
         public Container? Container { get; set; }
         [ForeignKey("MaViTri")]
-        public ViTriContainer? viTriContainer { get; set; }
+        public ViTriContainer? ViTriContainer { get; set; }
 
     }
     

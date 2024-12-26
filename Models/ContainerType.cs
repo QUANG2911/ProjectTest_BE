@@ -11,6 +11,6 @@ namespace ProjectTest.Models
         [MaxLength(50)]
         public required string TenLoai { get; set; }
 
-        public ICollection<Container>? containers { get; set; }
+        public ICollection<Container>? Containers { get; set; }
     }
 }

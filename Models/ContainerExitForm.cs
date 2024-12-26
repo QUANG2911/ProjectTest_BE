@@ -21,6 +21,6 @@ namespace ProjectTest.Models
 
         public DateTime? NgayXuat { get; set; }
 
-        public ICollection<Container>? containers { get; set; }
+        public ICollection<Container>? Containers { get; set; }
     }
 }

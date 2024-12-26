@@ -19,6 +19,6 @@ namespace ProjectTest.Models
         public required string UserName { get; set; }
 
         [ForeignKey("MaKH")]
-        public Customer? khachHang { get; set; }
+        public Customer? Customer { get; set; }
     }
 }

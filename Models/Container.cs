@@ -36,16 +36,16 @@ namespace ProjectTest.Models
         public string? TinhTrang { get; set; }
 
         [ForeignKey("MaKH")]
-        public Customer? khachHang { get; set; }
+        public Customer? Customer { get; set; }
         [ForeignKey("MaLoai")]
-        public ContainerType? LoaiContainer { get; set; }
+        public ContainerType? ContainerType { get; set; }
 
         [ForeignKey("MaPhieuXuat")]
-        public ContainerExitForm? phieuXuat { get; set; }
+        public ContainerExitForm? ContainerExitForm { get; set; }
 
-        public ICollection<ContainerEntryForm>? PhieuNhaps { get; set; }
+        public ICollection<ContainerEntryForm>? ContainerEntryForms { get; set; }
 
-        public ICollection<DetailContainer>? cT_Containers { get; set; }
+        public ICollection<DetailContainer>? DetailContainers { get; set; }
 
   
     }
