@@ -12,45 +12,45 @@ namespace test03.Controllers
     [ApiController]
     public class DanhSachPhieuXuatController : ControllerBase
     {
-        private readonly IServiceContainer _Icontext;
+        private readonly IServiceContainer serviceContainer;
 
-        public DanhSachPhieuXuatController(IServiceContainer Icontext)
+        public DanhSachPhieuXuatController(IServiceContainer serviceContainer)
         {
-            _Icontext = Icontext;
+            this.serviceContainer = serviceContainer;
         }
 
         [HttpGet("DanhSachPhieuXuat/{idUser}")]
         public async Task<IActionResult> DanhSachPhieuXuat(string idUser)
         {
-            var danhSachPhieuXuat = await _Icontext.GetDanhSachPhieuXuatDtos(idUser);
+            var danhSachPhieuXuat = await serviceContainer.GetDanhSachPhieuXuatDtos(idUser);
             return Ok(danhSachPhieuXuat);
         }
 
         [HttpGet("DanhSachContainerXuat/{maphieu}")]
         public async Task<IActionResult> DanhSachContainerXuat(string maphieu)
         {
-            var danhSachContainerXuat = await _Icontext.GetDetailPhieuXuatDtos(maphieu);
+            var danhSachContainerXuat = await serviceContainer.GetDetailPhieuXuatDtos(maphieu);
             return Ok(danhSachContainerXuat);
         }
 
         [HttpPut("DuyetPhieuXuat/{maphieu}/{trangThaiDuyet}")]
         public IActionResult DuyetPhieuXuat(string maphieu, int trangThaiDuyet)
         {
-            var danhSach = _Icontext.UpdateTrangThaiPhieuXuat(maphieu, trangThaiDuyet);
+            var danhSach = serviceContainer.UpdateTrangThaiPhieuXuat(maphieu, trangThaiDuyet);
             return Ok(danhSach);
         }
 
         [HttpGet("DsContainerCuaUserTrongCang{idUser}")]
         public async Task<IActionResult> DsContainerCuaUserTrongCang(string idUser)
         {
-            var listContainerChuaXuat = await _Icontext.GetDsContainerCuaUserTrongCang(idUser);
+            var listContainerChuaXuat = await serviceContainer.GetDsContainerCuaUserTrongCang(idUser);
             return Ok(listContainerChuaXuat);
         }
 
         [HttpPost("PhieuXuat/{idUser}/{idContainer}")]
         public IActionResult CreatePhieuXuat(string idUser, string idContainer, [FromBody] ContainerExitFormDetailDto thongTinPhieuXuat)
         {
-            var phieuXuat = _Icontext.CreatePhieuXuat(idUser, idContainer, thongTinPhieuXuat);
+            var phieuXuat = serviceContainer.CreatePhieuXuat(idUser, idContainer, thongTinPhieuXuat);
 
             return Ok(phieuXuat);
 

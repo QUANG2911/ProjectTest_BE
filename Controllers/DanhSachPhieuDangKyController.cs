@@ -11,38 +11,38 @@ namespace ProjectTest.Controllers
     [ApiController]
     public class DanhSachPhieuDangKyController : ControllerBase
     {
-        private readonly IServiceContainer _Icontext;
+        private readonly IServiceContainer serviceContainer;
 
-        public DanhSachPhieuDangKyController(IServiceContainer Icontext)
+        public DanhSachPhieuDangKyController(IServiceContainer serviceContainer)
         {
-            _Icontext = Icontext;
+            this.serviceContainer = serviceContainer;
         }
 
         [HttpGet("DanhSachPhieuNhap/{idUser}")]
         public async Task<IActionResult> DanhSachPhieuNhap(string idUser)
         {
-            var danhSachPhieuNhap = await _Icontext.GetDanhSachPhieuNhap(idUser);
+            var danhSachPhieuNhap = await serviceContainer.GetDanhSachPhieuNhap(idUser);
             return Ok(danhSachPhieuNhap);
         }
 
         [HttpGet("ThongTinPhieuNhap/{maPhieuNhap}")]
         public IActionResult ThongTinPhieuNhap(string maPhieuNhap)
         {
-            var thongTinPhieuNhapDto = _Icontext.GetDetailPhieuNhap(maPhieuNhap);
+            var thongTinPhieuNhapDto = serviceContainer.GetDetailPhieuNhap(maPhieuNhap);
             return Ok(thongTinPhieuNhapDto);
         }
 
         [HttpPut("CapNhatTrangThaiPhieuNhap/{maPhieuNhap}/{trangThai}")]
         public IActionResult CapNhatTrangThaiPhieuNhap(string maPhieuNhap, int trangThai)
         {
-            var phieuNhap = _Icontext.UpdatePhieuNhap(maPhieuNhap, trangThai);
+            var phieuNhap = serviceContainer.UpdatePhieuNhap(maPhieuNhap, trangThai);
             return Ok(phieuNhap);
         }
 
         [HttpPost("CreatePhieuDangKyNhap/{idUser}")]
         public IActionResult CreatePhieuDangKyNhap(string idUser, [FromBody] ContainerEntryFormDetailDto thongTinPhieuNhapDto)
         {
-            ContainerEntryForm phieuNhap = _Icontext.CreatePhieuNhap(idUser, thongTinPhieuNhapDto);
+            ContainerEntryForm phieuNhap = serviceContainer.CreatePhieuNhap(idUser, thongTinPhieuNhapDto);
             return Ok(phieuNhap);
         }
 

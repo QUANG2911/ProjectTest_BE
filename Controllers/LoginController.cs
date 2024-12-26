@@ -9,16 +9,16 @@ namespace ProjectTest.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly IAccountService _Icontext;
-        public LoginController(IAccountService icontext)
+        private readonly IAccountService accountService;
+        public LoginController(IAccountService accountService)
         {
-            _Icontext = icontext;
+            this.accountService = accountService;
         }
 
         [HttpGet("GetThongTinDangNhap/{userName}/{password}")]
         public ActionResult GetThongTinDangNhap(string userName, string password)
         {
-            var taiKhoan = _Icontext.GetUserId(userName,password);
+            var taiKhoan = accountService.GetUserId(userName,password);
 
             return Ok(taiKhoan);
         }
