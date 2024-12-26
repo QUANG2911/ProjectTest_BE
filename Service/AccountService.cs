@@ -15,8 +15,8 @@ namespace ProjectTest.Service
 
         public UserAccount GetUserId(string userName, string password)
         {
-            var taiKhoan = _context.taiKhoans.Where(p=>p.Pass == password && p.UserName == userName).FirstOrDefault();
-
+            var taiKhoan = _context.Accounts.Where(p=>p.Pass == password && p.UserName == userName).FirstOrDefault();
+            
             if (taiKhoan == null)
             {
                 throw new Exception("tài khoản không toàn tại");

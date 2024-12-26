@@ -24,21 +24,21 @@ namespace ProjectTest.Data
 
         public DbSet<ViTriContainer> ViTriContainers { get; set; }
 
-        public DbSet<Block> blocks { get; set; }
+        public DbSet<Block> Blocks { get; set; }
 
-        public DbSet<Container> containers { get; set; }
+        public DbSet<Container> Containers { get; set; }
 
-        public DbSet<DetailContainer> cT_Containers { get; set; }
+        public DbSet<DetailContainer> ContainerDetails { get; set; }
 
-        public DbSet<Customer> khachHangs { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
-        public DbSet<ContainerType> loaiContainers { get; set; }
+        public DbSet<ContainerType> ContainerTypes { get; set; }
 
-        public DbSet<ContainerEntryForm> phieuNhaps { get; set; }
+        public DbSet<ContainerEntryForm> ContainerEntryForms { get; set; }
 
-        public DbSet<ContainerExitForm> pHIEUXUATs { get; set; }
+        public DbSet<ContainerExitForm> ContainerExitForms { get; set; }
 
-        public DbSet<UserAccount> taiKhoans { get; set; }
+        public DbSet<UserAccount> Accounts { get; set; }
 
         public DbSet<Report> Reports { get; set; }
     }

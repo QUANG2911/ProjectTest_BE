@@ -28,21 +28,21 @@ namespace ProjectTest.Service
 
         public ContainerDetailDTO GetDetailContainer(int id, DateTime ngayDoiViTri)
         {
-            var thongTinCoBan = _context.containers.Where(p => p.Id == id).First();
+            var thongTinCoBan = _context.Containers.Where(p => p.Id == id).First();
 
-            string loaiContainer = _context.loaiContainers.Where(p => p.MaLoai == thongTinCoBan.MaLoai).First().TenLoai;
+            string loaiContainer = _context.ContainerTypes.Where(p => p.MaLoai == thongTinCoBan.MaLoai).First().TenLoai;
 
             string donViXuat = "Chưa có phiếu xuất";
 
             if (thongTinCoBan.MaPhieuXuat != null)
             {
-                var phieuXuat = _context.pHIEUXUATs.Where(p => p.MaPhieuXuat == thongTinCoBan.MaPhieuXuat).FirstOrDefault();
+                var phieuXuat = _context.ContainerExitForms.Where(p => p.MaPhieuXuat == thongTinCoBan.MaPhieuXuat).FirstOrDefault();
                 if(phieuXuat != null)
                 {
                     donViXuat = phieuXuat.DonViVanChuyen;
                 }                
             }
-            var phieuNhap = _context.phieuNhaps.Where(p => p.Id == id).FirstOrDefault();
+            var phieuNhap = _context.ContainerEntryForms.Where(p => p.Id == id).FirstOrDefault();
             if (phieuNhap == null)
             {
                 throw new Exception("Không tồn tại phiếu nhập này");
@@ -50,7 +50,7 @@ namespace ProjectTest.Service
             string donViNhap = phieuNhap.DonViVanChuyen;
 
 
-            var thongTinVanChuyen = from ct_Con in _context.cT_Containers.Where(p => p.Id == id && p.ThoiGianBatDau == ngayDoiViTri)
+            var thongTinVanChuyen = from ct_Con in _context.ContainerDetails.Where(p => p.Id == id && p.ThoiGianBatDau == ngayDoiViTri)
                                     from viTri in _context.ViTriContainers
                                     where ct_Con.MaViTri == viTri.MaViTri
                                     select new { viTri.MaBlock, viTri.SoTier, viTri.SoBay, viTri.SoRow, ct_Con.ThoiGianKetThuc, ct_Con.ThoiGianBatDau };
@@ -86,18 +86,18 @@ namespace ProjectTest.Service
 
         public ContainerEntryFormDetailDto GetDetailPhieuNhap(string maPhieuNhap)
         {            
-            var thongTinPhieuNhap = _context.phieuNhaps.Where(p => p.MaPhieuNhap == maPhieuNhap).FirstOrDefault();
+            var thongTinPhieuNhap = _context.ContainerEntryForms.Where(p => p.MaPhieuNhap == maPhieuNhap).FirstOrDefault();
 
             if (thongTinPhieuNhap == null)
             {
                 throw new Exception("phiếu nhập không tồn tại");
             }
-                var thongTinContainer = _context.containers.Where(p => p.Id == thongTinPhieuNhap.Id).FirstOrDefault();
+                var thongTinContainer = _context.Containers.Where(p => p.Id == thongTinPhieuNhap.Id).FirstOrDefault();
             if (thongTinContainer == null)
             {
                 throw new Exception("container không tồn tại");
             }
-            var loaiConatiner = _context.loaiContainers.Where(p => p.MaLoai == thongTinContainer.MaLoai).FirstOrDefault();
+            var loaiConatiner = _context.ContainerTypes.Where(p => p.MaLoai == thongTinContainer.MaLoai).FirstOrDefault();
             if(loaiConatiner == null)
                 throw new Exception("Hệ thống chưa tồn tại loại container này");
 
@@ -161,11 +161,11 @@ namespace ProjectTest.Service
         {
             TinhToanViTriContainer _toanViTriContainer = new TinhToanViTriContainer();
             // ktra phieu nhap
-            var phieuNhap = _context.phieuNhaps.Where(p => p.MaPhieuNhap == maPhieuNhap).FirstOrDefault();
+            var phieuNhap = _context.ContainerEntryForms.Where(p => p.MaPhieuNhap == maPhieuNhap).FirstOrDefault();
 
             if (phieuNhap == null)
                 throw new Exception("Phiếu nhập không tồn tại.");
-            var container = _context.containers.Where(p => p.Id == phieuNhap.Id).FirstOrDefault();
+            var container = _context.Containers.Where(p => p.Id == phieuNhap.Id).FirstOrDefault();
 
             if (container == null)
                 throw new Exception("Container không tồn tại.");
@@ -191,7 +191,7 @@ namespace ProjectTest.Service
                 // luu database
                 _context.ViTriContainers.Add(viTri);
 
-                _context.cT_Containers.Add(ct_Container);
+                _context.ContainerDetails.Add(ct_Container);
             }
             phieuNhap.TrangThaiDuyet = trangThai;
 
@@ -219,17 +219,17 @@ namespace ProjectTest.Service
         public ContainerEntryForm CreatePhieuNhap(string idUser, ContainerEntryFormDetailDto thongTinPhieuNhapDto)
         {
             int idContainer = 0;
-            var getMacontainer = _context.containers.OrderByDescending(p => p.Id).FirstOrDefault();
+            var getMacontainer = _context.Containers.OrderByDescending(p => p.Id).FirstOrDefault();
             if (getMacontainer != null) 
                 idContainer = getMacontainer.Id;
             string maContainer = idUser + thongTinPhieuNhapDto.LoaiContainer + thongTinPhieuNhapDto.NumContainer;
 
             ///Ktra container trong Cang
-            var checkContainer = _context.containers.Where(p => p.NumContainer == thongTinPhieuNhapDto.NumContainer).FirstOrDefault();
+            var checkContainer = _context.Containers.Where(p => p.NumContainer == thongTinPhieuNhapDto.NumContainer).FirstOrDefault();
 
             if (checkContainer != null && checkContainer.MaPhieuXuat != null)
             {
-                var checkPhieuXuat = _context.pHIEUXUATs.Where(p => p.MaPhieuXuat == checkContainer.MaPhieuXuat).FirstOrDefault();
+                var checkPhieuXuat = _context.ContainerExitForms.Where(p => p.MaPhieuXuat == checkContainer.MaPhieuXuat).FirstOrDefault();
                 if( checkPhieuXuat != null && checkPhieuXuat.NgayXuat >= thongTinPhieuNhapDto.NgayVanChuyenToiCang)
                 {
                     throw new Exception("Container này hiện chưa xuất cảng, không thể làm phiếu nhập cho nó.");
@@ -240,7 +240,7 @@ namespace ProjectTest.Service
                 throw new Exception("Container này hiện chưa có phiếu xuất,đang tồn tại trong cảng và không thể làm phiếu nhập cho nó.");
             }
             ////////////////////////////
-            string maPhieuNhap = idUser + _context.phieuNhaps.Count();
+            string maPhieuNhap = idUser + _context.ContainerEntryForms.Count();
             ContainerEntryForm phieuNhap = new ContainerEntryForm
             {
                 MaPhieuNhap = maPhieuNhap,
@@ -254,9 +254,9 @@ namespace ProjectTest.Service
 
             Container container = CreateContainer(maContainer, thongTinPhieuNhapDto.MaIso, idUser, thongTinPhieuNhapDto.LoaiContainer, thongTinPhieuNhapDto.TongTrongLuong, thongTinPhieuNhapDto.TongTrongLuong, thongTinPhieuNhapDto.NumContainer, thongTinPhieuNhapDto.size, thongTinPhieuNhapDto.NgaySanXuat);
    
-            _context.containers.Add(container);
+            _context.Containers.Add(container);
 
-            _context.phieuNhaps.Add(phieuNhap);
+            _context.ContainerEntryForms.Add(phieuNhap);
 
             _context.SaveChanges();
 
@@ -282,16 +282,16 @@ namespace ProjectTest.Service
 
         public ContainerExitForm UpdateTrangThaiPhieuXuat(string maphieu, int TRANGTHAIDUYET)
         {
-            var danhSach = _context.pHIEUXUATs.Where(p => p.MaPhieuXuat == maphieu).FirstOrDefault();
+            var danhSach = _context.ContainerExitForms.Where(p => p.MaPhieuXuat == maphieu).FirstOrDefault();
             if (danhSach == null)
                 throw new Exception("Phiếu xuất không tồn tại.");
 
 
-            var listDsContainerXuat = _context.containers.Where(p => p.MaPhieuXuat == maphieu).ToList();
+            var listDsContainerXuat = _context.Containers.Where(p => p.MaPhieuXuat == maphieu).ToList();
 
             foreach (var s in listDsContainerXuat)
             {
-                var ct_Xuat = _context.cT_Containers.Where(p => p.ThoiGianKetThuc == null && p.Id == s.Id).FirstOrDefault();
+                var ct_Xuat = _context.ContainerDetails.Where(p => p.ThoiGianKetThuc == null && p.Id == s.Id).FirstOrDefault();
                 if (ct_Xuat != null)
                     ct_Xuat.ThoiGianKetThuc = danhSach.NgayXuat;
             }
@@ -316,7 +316,7 @@ namespace ProjectTest.Service
 
             string[] listContainer = idContainer.Split(',');
 
-            string slgPhieuXuat = _context.pHIEUXUATs.Count().ToString();
+            string slgPhieuXuat = _context.ContainerExitForms.Count().ToString();
 
             string maPhieu = idUser + slgPhieuXuat;
             ContainerExitForm phieuXuat = new ContainerExitForm
@@ -332,20 +332,20 @@ namespace ProjectTest.Service
             for (int i = 0; i < (listContainer.Length - 1); i++)
             {
                 int maId = int.Parse(listContainer[i]);
-                var ct_Container = _context.cT_Containers.Where(p => p.Id == maId).FirstOrDefault();
+                var ct_Container = _context.ContainerDetails.Where(p => p.Id == maId).FirstOrDefault();
                 if (ct_Container != null)
                 {
                     ct_Container.ThoiGianKetThuc = thongTinPhieuXuat.NgayXuat;
                 }
 
-                var container = _context.containers.Where(p => p.Id == maId).FirstOrDefault();
+                var container = _context.Containers.Where(p => p.Id == maId).FirstOrDefault();
                 if (container != null)
                 {
                     container.MaPhieuXuat = maPhieu;
                 }
             }
 
-            _context.pHIEUXUATs.Add(phieuXuat);
+            _context.ContainerExitForms.Add(phieuXuat);
 
             _context.SaveChanges();
 
@@ -355,7 +355,7 @@ namespace ProjectTest.Service
 
         public List<ContainerType> GetLoaiContainer()
         {
-            var loaiContainer = _context.loaiContainers.ToList();
+            var loaiContainer = _context.ContainerTypes.ToList();
             return loaiContainer;
         }
     }
