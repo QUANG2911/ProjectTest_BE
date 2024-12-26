@@ -2,7 +2,7 @@
 
 namespace ProjectTest.Interface
 {
-    public interface I_Report
+    public interface IReport
     {
         //****************************REPORTCONTAINER**********************************
 

@@ -11,9 +11,9 @@ namespace ProjectTest.Controllers
     [ApiController]
     public class DanhSachPhieuDangKyController : ControllerBase
     {
-        private readonly I_ServiceContainer _Icontext;
+        private readonly IServiceContainer _Icontext;
 
-        public DanhSachPhieuDangKyController(I_ServiceContainer Icontext)
+        public DanhSachPhieuDangKyController(IServiceContainer Icontext)
         {
             _Icontext = Icontext;
         }
@@ -40,9 +40,9 @@ namespace ProjectTest.Controllers
         }
 
         [HttpPost("CreatePhieuDangKyNhap/{idUser}")]
-        public IActionResult CreatePhieuDangKyNhap(string idUser, [FromBody] ThongTinPhieuNhapDto thongTinPhieuNhapDto)
+        public IActionResult CreatePhieuDangKyNhap(string idUser, [FromBody] ContainerEntryFormDetailDto thongTinPhieuNhapDto)
         {
-            PhieuNhap phieuNhap = _Icontext.CreatePhieuNhap(idUser, thongTinPhieuNhapDto);
+            ContainerEntryForm phieuNhap = _Icontext.CreatePhieuNhap(idUser, thongTinPhieuNhapDto);
             return Ok(phieuNhap);
         }
 

@@ -5,20 +5,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectTest.Models
 {
-    [PrimaryKey(nameof(id), nameof(MAVITRI))]
-    public class CT_Container
+    [PrimaryKey(nameof(Id), nameof(MaViTri))]
+    public class DetailContainer
     {
-        public int id { get; set; }
-        public int MAVITRI { get; set; }
+        public int Id { get; set; }
+        public int MaViTri { get; set; }
 
         [Required]
-        public DateTime THOIGIANBATDAU { get; set; }
+        public DateTime ThoiGianBatDau { get; set; }
 
-        public DateTime? THOIGIANKETTHUC { get; set; }
+        public DateTime? ThoiGianKetThuc { get; set; }
 
-        [ForeignKey("id")]
+        [ForeignKey("Id")]
         public Container? Container { get; set; }
-        [ForeignKey("MAVITRI")]
+        [ForeignKey("MaViTri")]
         public ViTriContainer? viTriContainer { get; set; }
 
     }

@@ -12,9 +12,9 @@ namespace test03.Controllers
     [ApiController]
     public class DanhSachPhieuXuatController : ControllerBase
     {
-        private readonly I_ServiceContainer _Icontext;
+        private readonly IServiceContainer _Icontext;
 
-        public DanhSachPhieuXuatController(I_ServiceContainer Icontext)
+        public DanhSachPhieuXuatController(IServiceContainer Icontext)
         {
             _Icontext = Icontext;
         }
@@ -48,7 +48,7 @@ namespace test03.Controllers
         }
 
         [HttpPost("PhieuXuat/{idUser}/{idContainer}")]
-        public IActionResult CreatePhieuXuat(string idUser, string idContainer, [FromBody] ThongTinPhieuXuatDto thongTinPhieuXuat)
+        public IActionResult CreatePhieuXuat(string idUser, string idContainer, [FromBody] ContainerExitFormDetailDto thongTinPhieuXuat)
         {
             var phieuXuat = _Icontext.CreatePhieuXuat(idUser, idContainer, thongTinPhieuXuat);
 

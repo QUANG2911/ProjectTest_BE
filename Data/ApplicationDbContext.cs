@@ -14,11 +14,11 @@ namespace ProjectTest.Data
             base.OnModelCreating(modelBuilder);
 
             // Cấu hình lớp DanhSachContainerDto như một kiểu không được ánh xạ (Keyless Entity)
-            modelBuilder.Entity<DanhSachContainerDto>().HasNoKey();
-            modelBuilder.Entity<DanhSachPhieuNhapDto>().HasNoKey();
-            modelBuilder.Entity<DanhSachPhieuXuatDto>().HasNoKey();
-            modelBuilder.Entity<DanhSachContainerXuatKhoiCangDto>().HasNoKey();
-            modelBuilder.Entity<DanhSachContainerCuaKhTonDto>().HasNoKey();
+            modelBuilder.Entity<ContainerListDto>().HasNoKey();
+            modelBuilder.Entity<ContainerEntryFormListDto>().HasNoKey();
+            modelBuilder.Entity<ContainerExitFormListDto>().HasNoKey();
+            modelBuilder.Entity<ContainerListExitDto>().HasNoKey();
+            modelBuilder.Entity<ContainerListOfCustomerInSnpDto>().HasNoKey();
         }
 
 
@@ -28,17 +28,17 @@ namespace ProjectTest.Data
 
         public DbSet<Container> containers { get; set; }
 
-        public DbSet<CT_Container> cT_Containers { get; set; }
+        public DbSet<DetailContainer> cT_Containers { get; set; }
 
-        public DbSet<KhachHang> khachHangs { get; set; }
+        public DbSet<Customer> khachHangs { get; set; }
 
-        public DbSet<LoaiContainer> loaiContainers { get; set; }
+        public DbSet<ContainerType> loaiContainers { get; set; }
 
-        public DbSet<PhieuNhap> phieuNhaps { get; set; }
+        public DbSet<ContainerEntryForm> phieuNhaps { get; set; }
 
-        public DbSet<PhieuXuat> pHIEUXUATs { get; set; }
+        public DbSet<ContainerExitForm> pHIEUXUATs { get; set; }
 
-        public DbSet<TaiKhoan> taiKhoans { get; set; }
+        public DbSet<UserAccount> taiKhoans { get; set; }
 
         public DbSet<Report> Reports { get; set; }
     }

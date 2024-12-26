@@ -17,9 +17,9 @@ namespace ProjectTest.Service
         {
             var report = new Report
             {
-                USERID = userId,
-                NOIDUNG = noidung,
-                THOIGIANQUERY = DateTime.Now,
+                UserID = userId,
+                NoiDung = noidung,
+                ThoiGianQuery = DateTime.Now,
             };
 
             _context.Reports.Add(report);

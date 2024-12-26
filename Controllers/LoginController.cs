@@ -9,8 +9,8 @@ namespace ProjectTest.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly I_AccountService _Icontext;
-        public LoginController(I_AccountService icontext)
+        private readonly IAccountService _Icontext;
+        public LoginController(IAccountService icontext)
         {
             _Icontext = icontext;
         }

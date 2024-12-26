@@ -12,9 +12,9 @@ namespace ProjectTest.Controllers
     [ApiController]
     public class DanhSachContainerController : ControllerBase
     {
-        private readonly I_ServiceContainer _Icontext;
+        private readonly Interface.IServiceContainer _Icontext;
 
-        public DanhSachContainerController(I_ServiceContainer Icontext)
+        public DanhSachContainerController(Interface.IServiceContainer Icontext)
         {
             _Icontext = Icontext;
         }

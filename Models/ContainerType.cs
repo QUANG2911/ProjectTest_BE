@@ -3,13 +3,13 @@ using System.ComponentModel;
 
 namespace ProjectTest.Models
 {
-    public class LoaiContainer
+    public class ContainerType
     {
         [Key]
         [MaxLength(1)]
-        public required string MALOAI { get; set; }
+        public required string MaLoai { get; set; }
         [MaxLength(50)]
-        public required string TENLOAI { get; set; }
+        public required string TenLoai { get; set; }
 
         public ICollection<Container>? containers { get; set; }
     }

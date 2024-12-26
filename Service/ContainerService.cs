@@ -9,7 +9,7 @@ using ProjectTest.Math;
 using ProjectTest.Models;
 namespace ProjectTest.Service
 {
-    public class ContainerService : I_ServiceContainer
+    public class ContainerService : IServiceContainer
     {
         private ApplicationDbContext _context;
 
@@ -18,105 +18,104 @@ namespace ProjectTest.Service
             _context = context;
         }
         //***********************************Container******************************************
-        public async Task<List<DanhSachContainerDto>> GetDanhSachContainerAsync()
+        public async Task<List<ContainerListDto>> GetDanhSachContainerAsync()
         {
-            var dsCcontainers = await _context.Set<DanhSachContainerDto>()
+            var dsCcontainers = await _context.Set<ContainerListDto>()
                                         .FromSqlRaw("select * from DanhSachConTainerOCang") // view
                                         .ToListAsync();
             return dsCcontainers;
         }
 
-        public ThongTinContainerDTO GetDetailContainer(int id, DateTime ngayDoiViTri)
+        public ContainerDetailDTO GetDetailContainer(int id, DateTime ngayDoiViTri)
         {
-            var thongTinCoBan = _context.containers.Where(p => p.id == id).First();
+            var thongTinCoBan = _context.containers.Where(p => p.Id == id).First();
 
-            string loaiContainer = _context.loaiContainers.Where(p => p.MALOAI == thongTinCoBan.MALOAI).First().TENLOAI;
+            string loaiContainer = _context.loaiContainers.Where(p => p.MaLoai == thongTinCoBan.MaLoai).First().TenLoai;
 
             string donViXuat = "Chưa có phiếu xuất";
 
-            if (thongTinCoBan.MAPHIEUXUAT != null)
+            if (thongTinCoBan.MaPhieuXuat != null)
             {
-                var phieuXuat = _context.pHIEUXUATs.Where(p => p.MAPHIEUXUAT == thongTinCoBan.MAPHIEUXUAT).FirstOrDefault();
+                var phieuXuat = _context.pHIEUXUATs.Where(p => p.MaPhieuXuat == thongTinCoBan.MaPhieuXuat).FirstOrDefault();
                 if(phieuXuat != null)
                 {
-                    donViXuat = phieuXuat.DONVIVANCHUYEN;
+                    donViXuat = phieuXuat.DonViVanChuyen;
                 }                
             }
-            var phieuNhap = _context.phieuNhaps.Where(p => p.id == id).FirstOrDefault();
+            var phieuNhap = _context.phieuNhaps.Where(p => p.Id == id).FirstOrDefault();
             if (phieuNhap == null)
             {
                 throw new Exception("Không tồn tại phiếu nhập này");
             }
-            string donViNhap = phieuNhap.DONVIVANCHUYEN;
+            string donViNhap = phieuNhap.DonViVanChuyen;
 
 
-            var thongTinVanChuyen = from ct_Con in _context.cT_Containers.Where(p => p.id == id && p.THOIGIANBATDAU == ngayDoiViTri)
+            var thongTinVanChuyen = from ct_Con in _context.cT_Containers.Where(p => p.Id == id && p.ThoiGianBatDau == ngayDoiViTri)
                                     from viTri in _context.ViTriContainers
-                                    where ct_Con.MAVITRI == viTri.MAVITRI
-                                    select new { viTri.MABLOCK, viTri.SOTIER, viTri.SOBAY, viTri.SOROW, ct_Con.THOIGIANKETTHUC, ct_Con.THOIGIANBATDAU };
+                                    where ct_Con.MaViTri == viTri.MaViTri
+                                    select new { viTri.MaBlock, viTri.SoTier, viTri.SoBay, viTri.SoRow, ct_Con.ThoiGianKetThuc, ct_Con.ThoiGianBatDau };
 
-            ThongTinContainerDTO container = new ThongTinContainerDTO
+            ContainerDetailDTO container = new ContainerDetailDTO
             {
                 Id = id,
-                maContainer = thongTinCoBan.MACONTAINER,
-                numContainer = thongTinCoBan.NUMCONTAINER,
-                loaiContainer = loaiContainer,
-                MaIso = thongTinCoBan.ISOCODE,
-                size = thongTinCoBan.Size,
-                trongLuongRong = thongTinCoBan.TAREWEIGHT,
-                trongLuongTong = thongTinCoBan.MAXWEIGHT,
-
-                ngayDiToiViTri = thongTinVanChuyen.First().THOIGIANBATDAU,
-                ngayXuatCang = thongTinVanChuyen.First().THOIGIANKETTHUC,
-                tinhTrang = thongTinCoBan.TINHTRANG,
-                viTriHienTai = thongTinVanChuyen.First().MABLOCK + "," + thongTinVanChuyen.First().SOBAY + "," + thongTinVanChuyen.First().SOTIER + "," + thongTinVanChuyen.First().SOROW,
-                donViDuaToiCang = donViNhap,
+                MaContainer = thongTinCoBan.MaContainer,
+                NumContainer = thongTinCoBan.NumContainer,
+                LoaiContainer = loaiContainer,
+                MaIso = thongTinCoBan.IsoCode,
+                Size = thongTinCoBan.Size,
+                TrongLuongRong = thongTinCoBan.TareWeight,
+                TrongLuongTong = thongTinCoBan.MaxWeight,
+                NgayDiToiViTri = thongTinVanChuyen.First().ThoiGianBatDau,
+                NgayXuatCang = thongTinVanChuyen.First().ThoiGianKetThuc,
+                TinhTrang = thongTinCoBan.TinhTrang,
+                ViTriHienTai = thongTinVanChuyen.First().MaBlock + "," + thongTinVanChuyen.First().SoBay + "," + thongTinVanChuyen.First().SoTier + "," + thongTinVanChuyen.First().SoRow,
+                DonViDuaToiCang = donViNhap,
                 DonViXuatCang = donViXuat
             };
             return container;
         }
 
         //***********************************PhieuNhap******************************************
-        public async Task<List<DanhSachPhieuNhapDto>> GetDanhSachPhieuNhap(string idUser)
+        public async Task<List<ContainerEntryFormListDto>> GetDanhSachPhieuNhap(string idUser)
         {
-            var danhSachPhieuNhap = await _context.Set<DanhSachPhieuNhapDto>()
+            var danhSachPhieuNhap = await _context.Set<ContainerEntryFormListDto>()
                                    .FromSqlRaw("exec DANHSACHPHIEUNHAP @maUser = {0}", idUser)
                                    .ToListAsync();
             return danhSachPhieuNhap;
         }
 
-        public ThongTinPhieuNhapDto GetDetailPhieuNhap(string maPhieuNhap)
+        public ContainerEntryFormDetailDto GetDetailPhieuNhap(string maPhieuNhap)
         {            
-            var thongTinPhieuNhap = _context.phieuNhaps.Where(p => p.MAPHIEUNHAP == maPhieuNhap).FirstOrDefault();
+            var thongTinPhieuNhap = _context.phieuNhaps.Where(p => p.MaPhieuNhap == maPhieuNhap).FirstOrDefault();
 
             if (thongTinPhieuNhap == null)
             {
                 throw new Exception("phiếu nhập không tồn tại");
             }
-                var thongTinContainer = _context.containers.Where(p => p.id == thongTinPhieuNhap.id).FirstOrDefault();
+                var thongTinContainer = _context.containers.Where(p => p.Id == thongTinPhieuNhap.Id).FirstOrDefault();
             if (thongTinContainer == null)
             {
                 throw new Exception("container không tồn tại");
             }
-            var loaiConatiner = _context.loaiContainers.Where(p => p.MALOAI == thongTinContainer.MALOAI).FirstOrDefault();
+            var loaiConatiner = _context.loaiContainers.Where(p => p.MaLoai == thongTinContainer.MaLoai).FirstOrDefault();
             if(loaiConatiner == null)
                 throw new Exception("Hệ thống chưa tồn tại loại container này");
 
-            var thongTinPhieuNhapDto = new ThongTinPhieuNhapDto
+            var thongTinPhieuNhapDto = new ContainerEntryFormDetailDto
             {
-                Id = thongTinContainer.id,
-                maPhieuNhap = maPhieuNhap,
-                maContainer = thongTinContainer.MACONTAINER,
-                ngaySanXuat = thongTinContainer.NGAYSANXUAT,
-                numContainer = thongTinContainer.NUMCONTAINER,
-                loaiContainer = loaiConatiner.TENLOAI,
-                maIso = thongTinContainer.ISOCODE,
+                Id = thongTinContainer.Id,
+                MaPhieuNhap = maPhieuNhap,
+                MaContainer = thongTinContainer.MaContainer,
+                NgaySanXuat = thongTinContainer.NgaySanXuat,
+                NumContainer = thongTinContainer.NumContainer,
+                LoaiContainer = loaiConatiner.TenLoai,
+                MaIso = thongTinContainer.IsoCode,
                 size = thongTinContainer.Size,
-                trongLuongRong = thongTinContainer.TAREWEIGHT,
-                tongTrongLuong = thongTinContainer.MAXWEIGHT,
-                ngayVanChuyenToiCang = thongTinPhieuNhap.NGAYGIAOCONTAINER,
-                loaiHinhThucVanChuyen = thongTinPhieuNhap.DONVIVANCHUYEN,
-                bienSoDonViVanChuyen = thongTinPhieuNhap.BIENSODONVIVANCHUYEN
+                TrongLuongRong = thongTinContainer.TareWeight,
+                TongTrongLuong = thongTinContainer.MaxWeight,
+                NgayVanChuyenToiCang = thongTinPhieuNhap.NgayGiaoContainer,
+                LoaiHinhThucVanChuyen = thongTinPhieuNhap.DonViVanChuyen,
+                BienSoDonViVanChuyen = thongTinPhieuNhap.BienSoDonViVanChuyen
             };
   
             return thongTinPhieuNhapDto;
@@ -125,7 +124,7 @@ namespace ProjectTest.Service
         public ViTriContainer CreateViTriContainer(int ContainerSize,int SoBay, int soRow, int soTier)
         {
             TinhToanViTriContainer _toanViTriContainer = new TinhToanViTriContainer();
-            var viTriMax = _context.ViTriContainers.OrderByDescending(p => p.MAVITRI).FirstOrDefault();
+            var viTriMax = _context.ViTriContainers.OrderByDescending(p => p.MaViTri).FirstOrDefault();
 
             string x = _toanViTriContainer.getViTriContainer(ContainerSize, SoBay, soRow, soTier);
 
@@ -137,36 +136,36 @@ namespace ProjectTest.Service
 
             ViTriContainer viTri1 = new ViTriContainer
             {
-                MABLOCK = viTriMoi[0],
-                SOBAY = int.Parse(viTriMoi[1]),
-                SOROW = int.Parse(viTriMoi[2]),
-                SOTIER = int.Parse(viTriMoi[3]),
-                TRANGTHAIRONG = 1
+                MaBlock = viTriMoi[0],
+                SoBay = int.Parse(viTriMoi[1]),
+                SoRow = int.Parse(viTriMoi[2]),
+                SoTier = int.Parse(viTriMoi[3]),
+                TrangThaiRong = 1
             };
             return viTri1;
         }
 
-        public CT_Container CreateCT_Container(int idViTri, int idContainer)
+        public DetailContainer CreateCT_Container(int idViTri, int idContainer)
         {
-            CT_Container cT_Container = new CT_Container
+            DetailContainer cT_Container = new DetailContainer
             {
-                id = idContainer,
-                MAVITRI = idViTri + 1,
-                THOIGIANBATDAU = DateTime.Today,
-                THOIGIANKETTHUC = null
+                Id = idContainer,
+                MaViTri = idViTri + 1,
+                ThoiGianBatDau = DateTime.Today,
+                ThoiGianKetThuc = null
             };
             return cT_Container;
         }
 
-        public PhieuNhap UpdatePhieuNhap(string maPhieuNhap, int trangThai)
+        public ContainerEntryForm UpdatePhieuNhap(string maPhieuNhap, int trangThai)
         {
             TinhToanViTriContainer _toanViTriContainer = new TinhToanViTriContainer();
             // ktra phieu nhap
-            var phieuNhap = _context.phieuNhaps.Where(p => p.MAPHIEUNHAP == maPhieuNhap).FirstOrDefault();
+            var phieuNhap = _context.phieuNhaps.Where(p => p.MaPhieuNhap == maPhieuNhap).FirstOrDefault();
 
             if (phieuNhap == null)
                 throw new Exception("Phiếu nhập không tồn tại.");
-            var container = _context.containers.Where(p => p.id == phieuNhap.id).FirstOrDefault();
+            var container = _context.containers.Where(p => p.Id == phieuNhap.Id).FirstOrDefault();
 
             if (container == null)
                 throw new Exception("Container không tồn tại.");
@@ -177,24 +176,24 @@ namespace ProjectTest.Service
                 int soRow = 1;
                 int soTier = 1;
                 // ktra cho chua container
-                var viTriMax = _context.ViTriContainers.OrderByDescending(p => p.MAVITRI).FirstOrDefault();
+                var viTriMax = _context.ViTriContainers.OrderByDescending(p => p.MaViTri).FirstOrDefault();
 
                 if(viTriMax != null)
                 {
-                    maViTri = viTriMax.MAVITRI;
-                    soBay = viTriMax.SOBAY;
-                    soRow = viTriMax.SOROW;
-                    soTier = viTriMax.SOTIER;
+                    maViTri = viTriMax.MaViTri;
+                    soBay = viTriMax.SoBay;
+                    soRow = viTriMax.SoRow;
+                    soTier = viTriMax.SoTier;
                 }    
                 var viTri = CreateViTriContainer(container.Size, soBay, soRow, soTier);
 
-                var ct_Container = CreateCT_Container(maViTri, container.id);
+                var ct_Container = CreateCT_Container(maViTri, container.Id);
                 // luu database
                 _context.ViTriContainers.Add(viTri);
 
                 _context.cT_Containers.Add(ct_Container);
             }
-            phieuNhap.TRANGTHAIDUYET = trangThai;
+            phieuNhap.TrangThaiDuyet = trangThai;
 
             _context.SaveChanges();
             return (phieuNhap);
@@ -204,56 +203,56 @@ namespace ProjectTest.Service
         {
             Container container = new Container
             {
-                MACONTAINER = maContainer,
-                ISOCODE = maIso,
-                MAKH = idUser,
-                MALOAI = maLoai,
-                MAXWEIGHT = maxWeight,
-                TAREWEIGHT = tareWeight,
-                NUMCONTAINER = numContainer,
+                MaContainer = maContainer,
+                IsoCode = maIso,
+                MaKH = idUser,
+                MaLoai = maLoai,
+                MaxWeight = maxWeight,
+                TareWeight = tareWeight,
+                NumContainer = numContainer,
                 Size = size,
-                NGAYSANXUAT = ngaySanXuat
+                NgaySanXuat = ngaySanXuat
             };
             return container;
         }
 
-        public PhieuNhap CreatePhieuNhap(string idUser, ThongTinPhieuNhapDto thongTinPhieuNhapDto)
+        public ContainerEntryForm CreatePhieuNhap(string idUser, ContainerEntryFormDetailDto thongTinPhieuNhapDto)
         {
             int idContainer = 0;
-            var getMacontainer = _context.containers.OrderByDescending(p => p.id).FirstOrDefault();
+            var getMacontainer = _context.containers.OrderByDescending(p => p.Id).FirstOrDefault();
             if (getMacontainer != null) 
-                idContainer = getMacontainer.id;
-            string maContainer = idUser + thongTinPhieuNhapDto.loaiContainer + thongTinPhieuNhapDto.numContainer;
+                idContainer = getMacontainer.Id;
+            string maContainer = idUser + thongTinPhieuNhapDto.LoaiContainer + thongTinPhieuNhapDto.NumContainer;
 
             ///Ktra container trong Cang
-            var checkContainer = _context.containers.Where(p => p.NUMCONTAINER == thongTinPhieuNhapDto.numContainer).FirstOrDefault();
+            var checkContainer = _context.containers.Where(p => p.NumContainer == thongTinPhieuNhapDto.NumContainer).FirstOrDefault();
 
-            if (checkContainer != null && checkContainer.MAPHIEUXUAT != null)
+            if (checkContainer != null && checkContainer.MaPhieuXuat != null)
             {
-                var checkPhieuXuat = _context.pHIEUXUATs.Where(p => p.MAPHIEUXUAT == checkContainer.MAPHIEUXUAT).FirstOrDefault();
-                if( checkPhieuXuat != null && checkPhieuXuat.NGAYXUAT >= thongTinPhieuNhapDto.ngayVanChuyenToiCang)
+                var checkPhieuXuat = _context.pHIEUXUATs.Where(p => p.MaPhieuXuat == checkContainer.MaPhieuXuat).FirstOrDefault();
+                if( checkPhieuXuat != null && checkPhieuXuat.NgayXuat >= thongTinPhieuNhapDto.NgayVanChuyenToiCang)
                 {
                     throw new Exception("Container này hiện chưa xuất cảng, không thể làm phiếu nhập cho nó.");
                 }    
             }
-            else if (checkContainer != null && checkContainer.MAPHIEUXUAT == null)
+            else if (checkContainer != null && checkContainer.MaPhieuXuat == null)
             {
                 throw new Exception("Container này hiện chưa có phiếu xuất,đang tồn tại trong cảng và không thể làm phiếu nhập cho nó.");
             }
             ////////////////////////////
             string maPhieuNhap = idUser + _context.phieuNhaps.Count();
-            PhieuNhap phieuNhap = new PhieuNhap
+            ContainerEntryForm phieuNhap = new ContainerEntryForm
             {
-                MAPHIEUNHAP = maPhieuNhap,
-                id = idContainer + 1,
-                DONVIVANCHUYEN = thongTinPhieuNhapDto.loaiHinhThucVanChuyen,
-                BIENSODONVIVANCHUYEN = thongTinPhieuNhapDto.bienSoDonViVanChuyen,
-                NGAYDK = DateTime.Today,
-                NGAYGIAOCONTAINER = thongTinPhieuNhapDto.ngayVanChuyenToiCang,
-                TRANGTHAIDUYET = 0
+                MaPhieuNhap = maPhieuNhap,
+                Id = idContainer + 1,
+                DonViVanChuyen = thongTinPhieuNhapDto.LoaiHinhThucVanChuyen,
+                BienSoDonViVanChuyen = thongTinPhieuNhapDto.BienSoDonViVanChuyen,
+                NgayDK = DateTime.Today,
+                NgayGiaoContainer = thongTinPhieuNhapDto.NgayVanChuyenToiCang,
+                TrangThaiDuyet = 0
             };
 
-            Container container = CreateContainer(maContainer, thongTinPhieuNhapDto.maIso, idUser, thongTinPhieuNhapDto.loaiContainer, thongTinPhieuNhapDto.tongTrongLuong, thongTinPhieuNhapDto.tongTrongLuong, thongTinPhieuNhapDto.numContainer, thongTinPhieuNhapDto.size, thongTinPhieuNhapDto.ngaySanXuat);
+            Container container = CreateContainer(maContainer, thongTinPhieuNhapDto.MaIso, idUser, thongTinPhieuNhapDto.LoaiContainer, thongTinPhieuNhapDto.TongTrongLuong, thongTinPhieuNhapDto.TongTrongLuong, thongTinPhieuNhapDto.NumContainer, thongTinPhieuNhapDto.size, thongTinPhieuNhapDto.NgaySanXuat);
    
             _context.containers.Add(container);
 
@@ -265,52 +264,52 @@ namespace ProjectTest.Service
         }
 
         //***********************************PHIEUXUAT******************************************
-        public async Task<List<DanhSachPhieuXuatDto>> GetDanhSachPhieuXuatDtos(string idUser)
+        public async Task<List<ContainerExitFormListDto>> GetDanhSachPhieuXuatDtos(string idUser)
         {
-            var danhSachPhieuXuat = await _context.Set<DanhSachPhieuXuatDto>()
+            var danhSachPhieuXuat = await _context.Set<ContainerExitFormListDto>()
                                    .FromSqlRaw("exec DANHSACHPHIEUXUAT @maUser ={0}", idUser)
                                    .ToListAsync();
             return danhSachPhieuXuat;
         }
 
-        public async Task<List<DanhSachContainerXuatKhoiCangDto>> GetDetailPhieuXuatDtos(string maphieu)
+        public async Task<List<ContainerListExitDto>> GetDetailPhieuXuatDtos(string maphieu)
         {
-            var danhSachContainerXuat = await _context.Set<DanhSachContainerXuatKhoiCangDto>()
+            var danhSachContainerXuat = await _context.Set<ContainerListExitDto>()
                                                 .FromSqlRaw("exec DanhSachContainerPhieuXuat @maPhieu = {0}", maphieu)
                                                 .ToListAsync();
             return danhSachContainerXuat;
         }
 
-        public PhieuXuat UpdateTrangThaiPhieuXuat(string maphieu, int TRANGTHAIDUYET)
+        public ContainerExitForm UpdateTrangThaiPhieuXuat(string maphieu, int TRANGTHAIDUYET)
         {
-            var danhSach = _context.pHIEUXUATs.Where(p => p.MAPHIEUXUAT == maphieu).FirstOrDefault();
+            var danhSach = _context.pHIEUXUATs.Where(p => p.MaPhieuXuat == maphieu).FirstOrDefault();
             if (danhSach == null)
                 throw new Exception("Phiếu xuất không tồn tại.");
 
 
-            var listDsContainerXuat = _context.containers.Where(p => p.MAPHIEUXUAT == maphieu).ToList();
+            var listDsContainerXuat = _context.containers.Where(p => p.MaPhieuXuat == maphieu).ToList();
 
             foreach (var s in listDsContainerXuat)
             {
-                var ct_Xuat = _context.cT_Containers.Where(p => p.THOIGIANKETTHUC == null && p.id == s.id).FirstOrDefault();
+                var ct_Xuat = _context.cT_Containers.Where(p => p.ThoiGianKetThuc == null && p.Id == s.Id).FirstOrDefault();
                 if (ct_Xuat != null)
-                    ct_Xuat.THOIGIANKETTHUC = danhSach.NGAYXUAT;
+                    ct_Xuat.ThoiGianKetThuc = danhSach.NgayXuat;
             }
 
-            danhSach.TRANGTHAIDUYET = TRANGTHAIDUYET;
+            danhSach.TrangThaiDuyet = TRANGTHAIDUYET;
             _context.SaveChanges();
             return danhSach;
         }
 
-        public async Task<List<DanhSachContainerCuaKhTonDto>> GetDsContainerCuaUserTrongCang(string idUser)
+        public async Task<List<ContainerListOfCustomerInSnpDto>> GetDsContainerCuaUserTrongCang(string idUser)
         {
-            var listContainerChuaXuat = await _context.Set<DanhSachContainerCuaKhTonDto>()
+            var listContainerChuaXuat = await _context.Set<ContainerListOfCustomerInSnpDto>()
                                                 .FromSqlRaw("exec DANHSACHCONTAINERCUAKHCONTON @maKH = {0}", idUser)
                                                 .ToListAsync();
             return listContainerChuaXuat;
         }
 
-        public PhieuXuat CreatePhieuXuat(string idUser, string idContainer, ThongTinPhieuXuatDto thongTinPhieuXuat)
+        public ContainerExitForm CreatePhieuXuat(string idUser, string idContainer, ContainerExitFormDetailDto thongTinPhieuXuat)
         {
             /// chuoi test
             //   // string listTest = "26,15,17,";
@@ -320,29 +319,29 @@ namespace ProjectTest.Service
             string slgPhieuXuat = _context.pHIEUXUATs.Count().ToString();
 
             string maPhieu = idUser + slgPhieuXuat;
-            PhieuXuat phieuXuat = new PhieuXuat
+            ContainerExitForm phieuXuat = new ContainerExitForm
             {
-                MAPHIEUXUAT = maPhieu,
-                NGAYLAMPHIEU = DateTime.Now,
-                DONVIVANCHUYEN = thongTinPhieuXuat.DONVIVANCHUYEN,
-                MASODONVIVANCHUYEN = thongTinPhieuXuat.bienSoDonViVanChuyen,
-                NGAYXUAT = thongTinPhieuXuat.NGAYXUAT,
-                TRANGTHAIDUYET = 0
+                MaPhieuXuat = maPhieu,
+                NgayLamPhieu = DateTime.Now,
+                DonViVanChuyen = thongTinPhieuXuat.DonViVanChuyen,
+                MaSoDonViVanChuyen = thongTinPhieuXuat.BienSoDonViVanChuyen,
+                NgayXuat = thongTinPhieuXuat.NgayXuat,
+                TrangThaiDuyet = 0
             };
 
             for (int i = 0; i < (listContainer.Length - 1); i++)
             {
                 int maId = int.Parse(listContainer[i]);
-                var ct_Container = _context.cT_Containers.Where(p => p.id == maId).FirstOrDefault();
+                var ct_Container = _context.cT_Containers.Where(p => p.Id == maId).FirstOrDefault();
                 if (ct_Container != null)
                 {
-                    ct_Container.THOIGIANKETTHUC = thongTinPhieuXuat.NGAYXUAT;
+                    ct_Container.ThoiGianKetThuc = thongTinPhieuXuat.NgayXuat;
                 }
 
-                var container = _context.containers.Where(p => p.id == maId).FirstOrDefault();
+                var container = _context.containers.Where(p => p.Id == maId).FirstOrDefault();
                 if (container != null)
                 {
-                    container.MAPHIEUXUAT = maPhieu;
+                    container.MaPhieuXuat = maPhieu;
                 }
             }
 
@@ -354,7 +353,7 @@ namespace ProjectTest.Service
         }
 
 
-        public List<LoaiContainer> GetLoaiContainer()
+        public List<ContainerType> GetLoaiContainer()
         {
             var loaiContainer = _context.loaiContainers.ToList();
             return loaiContainer;

@@ -6,20 +6,20 @@ namespace ProjectTest.Models
     public class ViTriContainer
     {
         [Key]
-        public int MAVITRI { get; set; }
+        public int MaViTri { get; set; }
         [MaxLength(1)]       
-        public string? MABLOCK { get; set; }
+        public string? MaBlock { get; set; }
         [Range(0, 3)]
-        public int SOBAY { get; set; }
+        public int SoBay { get; set; }
         [Range(0, 3)]
-        public int SOROW { get; set; }
+        public int SoRow { get; set; }
         [Range(0, 4)]
-        public int SOTIER { get; set; }
+        public int SoTier { get; set; }
 
         [Range(0, 1)]
-        public int TRANGTHAIRONG { get; set; }
-        public ICollection<CT_Container>? cT_Containers { get; set; }
-        [ForeignKey("MABLOCK")]
+        public int TrangThaiRong { get; set; }
+        public ICollection<DetailContainer>? cT_Containers { get; set; }
+        [ForeignKey("MaBlock")]
         public Block? Block { get; set; }    
     }
 }

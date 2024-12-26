@@ -6,8 +6,8 @@ namespace ProjectTest.Models
     {
         [Key]
         [MaxLength(1)]
-        public required string MABLOCK { get; set; }
-        public int LOAIBAY { get; set; }
+        public required string MaBlock { get; set; }
+        public int LoaiBay { get; set; }
 
         public ICollection<ViTriContainer>? viTriContainers { get; set; }
     }

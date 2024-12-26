@@ -3,21 +3,21 @@ using System.ComponentModel;
 
 namespace ProjectTest.Models
 {
-    public class KhachHang
+    public class Customer
     {
         [Key]
         [MaxLength(3)]
-        public required string MAKH { get; set; }
+        public required string MaKH { get; set; }
         [MaxLength(50)]
-        public required string TENKH { get; set; }
+        public required string TenKH { get; set; }
 
         [MaxLength(10)]
-        public required string SDT { get; set; }
+        public required string Sdt { get; set; }
         [MaxLength(13)]
-        public required string MST { get; set; }
+        public required string Mst { get; set; }
 
         public ICollection<Container>? containers { get; set; }
 
-        public ICollection<TaiKhoan>? taiKhoans { get; set; }
+        public ICollection<UserAccount>? taiKhoans { get; set; }
     }
 }
