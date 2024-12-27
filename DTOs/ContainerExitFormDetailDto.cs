@@ -4,9 +4,9 @@ namespace ProjectTest.DTOs
 {
     public class ContainerExitFormDetailDto
     {
-        public required string DonViVanChuyen { get; set; }
-        public required string BienSoDonViVanChuyen { get; set; }
+        public required string TransportExitType { get; set; }
+        public required string TransportExitLicensePlate { get; set; }
 
-        public DateTime NgayXuat { get; set; }
+        public DateTime DateOfExitContainer { get; set; }
     }
 }

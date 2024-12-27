@@ -2,12 +2,12 @@
 {
     public class ContainerExitFormListDto
     {
-        public required string MaPhieuXuat { get; set; }
+        public required string IdExitForm { get; set; }
 
-        public DateTime NgayLamPhieu { get; set; }
-        public DateTime NgayXuat { get; set; }
-        public int TrangThaiDuyet { get; set; }
-        public required string TenKh { get; set; }
-        public required string Sdt { get; set; }
+        public DateTime DateOfExitRegistration { get; set; }
+        public DateTime DateOfExitContainer { get; set; }
+        public int Status { get; set; }
+        public required string CustomerName { get; set; }
+        public required string PhoneNumber { get; set; }
     }
 }

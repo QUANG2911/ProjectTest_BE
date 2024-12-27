@@ -2,13 +2,13 @@
 {
     public class ContainerEntryFormListDto
     {
-        public required string MaPhieuNhap {  get; set; }
+        public required string IdEntryForm {  get; set; }
 
-        public DateTime NgayDk { get; set; }
-        public DateTime NgayGiaoContainer { get; set; }
-        public int TrangThaiDuyet { get; set; }
-        public required string TenKh { get; set; }
-        public required string Sdt { get; set; }
+        public DateTime DateOfEntryRegistration { get; set; }
+        public DateTime DateOfEntryContainer { get; set; }
+        public int Status { get; set; }
+        public required string CustomerName { get; set; }
+        public required string PhoneNumber { get; set; }
         public int Id { get; set; }
 
     }

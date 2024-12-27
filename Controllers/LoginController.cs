@@ -15,8 +15,8 @@ namespace ProjectTest.Controllers
             _accountService = accountService;
         }
 
-        [HttpGet("GetThongTinDangNhap/{userName}/{password}")]
-        public ActionResult GetThongTinDangNhap(string userName, string password)
+        [HttpGet("GetUserId/{userName}/{password}")]
+        public ActionResult GetUserId(string userName, string password)
         {
             var account = _accountService.GetUserId(userName,password);
 

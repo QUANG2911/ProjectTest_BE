@@ -26,7 +26,7 @@ namespace ProjectTest.Interface
 
         ContainerEntryForm CreateContainerEntryForm(string idUser, ContainerEntryFormDetailDto idEntryForm);
 
-        void CreateContainer(string idContainer, string isoCode, string idUser, string typeContainer, int maxWeight, int tareWeight, string numContainer, int size, DateTime dateOfManufacture, DateTime DateOfContainerEntry);
+        void CreateContainer(string idContainer, string isoCode, string idUser, string typeContainer, int maxWeight, int tareWeight, string numContainer, int size, DateTime dateOfManufacture, DateTime dateOfContainerEntry);
 
         //****************************PHIEU XUAT**********************************
         Task<List<ContainerExitFormListDto>> GetContainerExitFormList(string idUser);
