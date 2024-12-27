@@ -22,7 +22,7 @@ namespace ProjectTest.Controllers
         [HttpGet("GetDanhSachContainer")]
         public async Task<ActionResult> getDanhSachContainer()
         {
-            var dsCcontainers = await _serviceContainer.GetDanhSachContainerAsync();
+            var dsCcontainers = await _serviceContainer.GetContainerListAsync();
             return Ok(dsCcontainers);
         }
 
@@ -30,7 +30,7 @@ namespace ProjectTest.Controllers
         [HttpGet("GetChiTietContainer/{id}/{ngayDoiViTri}")]
         public ActionResult getThongTinContainer(int id, DateTime ngayDoiViTri)
         {
-            var thongTinCoBan = _serviceContainer.GetDetailContainer(id,ngayDoiViTri);
+            var thongTinCoBan = _serviceContainer.GetInformationContainer(id,ngayDoiViTri);
             return Ok(thongTinCoBan);
         }
 
@@ -38,7 +38,7 @@ namespace ProjectTest.Controllers
         [HttpGet("getLoaiContainer")]
         public ActionResult getLoaiContainer()
         {
-            var dsLoaiContainer = _serviceContainer.GetLoaiContainer();
+            var dsLoaiContainer = _serviceContainer.GetContainerType();
             return Ok(dsLoaiContainer);
         }
     }

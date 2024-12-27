@@ -18,9 +18,9 @@ namespace ProjectTest.Controllers
         [HttpGet("GetThongTinDangNhap/{userName}/{password}")]
         public ActionResult GetThongTinDangNhap(string userName, string password)
         {
-            var taiKhoan = _accountService.GetUserId(userName,password);
+            var account = _accountService.GetUserId(userName,password);
 
-            return Ok(taiKhoan);
+            return Ok(account);
         }
     }
 }

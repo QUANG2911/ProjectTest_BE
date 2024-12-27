@@ -8,7 +8,7 @@ namespace ProjectTest.Math
 {
     
 
-    public class TinhToanViTriContainer : I_ViTriContainer
+    public class TinhToanViTriContainer : IContainerLocation
     {
         public string getContainerLocation(int typeBay, int bayLocation, int rowLocation, int tierLocation)
         {

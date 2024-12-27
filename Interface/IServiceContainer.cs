@@ -8,39 +8,40 @@ namespace ProjectTest.Interface
     public interface IServiceContainer
     {
         //****************************CONTAINER**********************************
-        Task<List<ContainerListDto>> GetDanhSachContainerAsync();
+        Task<List<ContainerListDto>> GetContainerListAsync();
 
-        ContainerDetailDTO GetDetailContainer(int id, DateTime ngayDoiViTri);
+        ContainerDetailDTO GetInformationContainer(int id, DateTime dateChangeLocation);
 
         //****************************PHIEU NHAP**********************************
 
-        Task<List<ContainerEntryFormListDto>> GetDanhSachPhieuNhap(string idUser);
+        Task<List<ContainerEntryFormListDto>> GetContainerEntryFormList(string idUser);
 
-        ContainerEntryFormDetailDto GetDetailPhieuNhap(string maPhieuNhap);
+        ContainerEntryFormDetailDto GetInformationContainerEntryForm(string idEntryForm);
 
-        ContainerEntryForm UpdatePhieuNhap(string maPhieuNhap, int trangThai);
+        ContainerEntryForm UpdateStatusContainerEntryForm(string idEntryForm, int status);
 
-        void CreateViTriContainer(int ContainerSize, int SoBay, int soRow, int soTier);
+        void CreateContainerLocation(int containerSize, int bayNumber, int rowNumber, int tierNumber);
 
-        void CreateCT_Container(int idViTri, int idContainer);
+        void CreateDetailContainer(int idViTri, int idContainer);
 
-        ContainerEntryForm CreatePhieuNhap(string idUser, ContainerEntryFormDetailDto phieuNhap);
-        void CreateContainer(string maContainer, string maIso, string idUser, string maLoai, int maxWeight, int tareWeight, string numContainer, int size, DateTime ngaySanXuat, DateTime ngayVanChuyenToiCang);
+        ContainerEntryForm CreateContainerEntryForm(string idUser, ContainerEntryFormDetailDto idEntryForm);
+
+        void CreateContainer(string idContainer, string isoCode, string idUser, string typeContainer, int maxWeight, int tareWeight, string numContainer, int size, DateTime dateOfManufacture, DateTime DateOfContainerEntry);
 
         //****************************PHIEU XUAT**********************************
-        Task<List<ContainerExitFormListDto>> GetDanhSachPhieuXuatDtos(string idUser);
+        Task<List<ContainerExitFormListDto>> GetContainerExitFormList(string idUser);
 
-        Task<List<ContainerListExitDto>> GetDetailPhieuXuatDtos(string maphieu);
+        Task<List<ContainerListExitDto>> GetInformationContainerExitForm(string idExitForm);
 
-        ContainerExitForm UpdateTrangThaiPhieuXuat(string maphieu, int TRANGTHAIDUYET);
+        ContainerExitForm UpdateStatusContainerExitForm(string idExitForm, int status);
 
-        Task<List<ContainerListOfCustomerInSnpDto>> GetDsContainerCuaUserTrongCang(string idUser);
+        Task<List<ContainerListOfCustomerInSnpDto>> GetListContainerOfUserInSnp(string idUser);
 
-        ContainerExitForm CreatePhieuXuat(string idUser, string idContainer, ContainerExitFormDetailDto thongTinPhieuXuat);
+        ContainerExitForm CreateContainerExitForm(string idUser, string idContainer, ContainerExitFormDetailDto containerExitFormDetailDto);
 
 
         //****************************LOAICONTAINER**********************************
-        List<ContainerType> GetLoaiContainer();
+        List<ContainerType> GetContainerType();
 
        
 

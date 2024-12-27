@@ -1,6 +1,6 @@
 ﻿namespace ProjectTest.Interface
 {
-    interface I_ViTriContainer
+    interface IContainerLocation
     {
         string getContainerLocation(int typeBay, int bayLocation, int rowLocation, int tierLocation);
 

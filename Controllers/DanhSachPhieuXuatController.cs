@@ -22,35 +22,35 @@ namespace test03.Controllers
         [HttpGet("DanhSachPhieuXuat/{idUser}")]
         public async Task<IActionResult> DanhSachPhieuXuat(string idUser)
         {
-            var danhSachPhieuXuat = await _serviceContainer.GetDanhSachPhieuXuatDtos(idUser);
+            var danhSachPhieuXuat = await _serviceContainer.GetContainerExitFormList(idUser);
             return Ok(danhSachPhieuXuat);
         }
 
-        [HttpGet("DanhSachContainerXuat/{maphieu}")]
-        public async Task<IActionResult> DanhSachContainerXuat(string maphieu)
+        [HttpGet("DanhSachContainerXuat/{idExitForm}")]
+        public async Task<IActionResult> DanhSachContainerXuat(string idExitForm)
         {
-            var danhSachContainerXuat = await _serviceContainer.GetDetailPhieuXuatDtos(maphieu);
+            var danhSachContainerXuat = await _serviceContainer.GetInformationContainerExitForm(idExitForm);
             return Ok(danhSachContainerXuat);
         }
 
-        [HttpPut("DuyetPhieuXuat/{maphieu}/{trangThaiDuyet}")]
-        public IActionResult DuyetPhieuXuat(string maphieu, int trangThaiDuyet)
+        [HttpPut("DuyetPhieuXuat/{idExitForm}/{status}")]
+        public IActionResult DuyetPhieuXuat(string idExitForm, int status)
         {
-            var danhSach = _serviceContainer.UpdateTrangThaiPhieuXuat(maphieu, trangThaiDuyet);
+            var danhSach = _serviceContainer.UpdateStatusContainerExitForm(idExitForm, status);
             return Ok(danhSach);
         }
 
         [HttpGet("DsContainerCuaUserTrongCang{idUser}")]
         public async Task<IActionResult> DsContainerCuaUserTrongCang(string idUser)
         {
-            var listContainerChuaXuat = await _serviceContainer.GetDsContainerCuaUserTrongCang(idUser);
+            var listContainerChuaXuat = await _serviceContainer.GetListContainerOfUserInSnp(idUser);
             return Ok(listContainerChuaXuat);
         }
 
         [HttpPost("PhieuXuat/{idUser}/{idContainer}")]
-        public IActionResult CreatePhieuXuat(string idUser, string idContainer, [FromBody] ContainerExitFormDetailDto thongTinPhieuXuat)
+        public IActionResult CreatePhieuXuat(string idUser, string idContainer, [FromBody] ContainerExitFormDetailDto containerExitFormDetailDto)
         {
-            var phieuXuat = _serviceContainer.CreatePhieuXuat(idUser, idContainer, thongTinPhieuXuat);
+            var phieuXuat = _serviceContainer.CreateContainerExitForm(idUser, idContainer, containerExitFormDetailDto);
 
             return Ok(phieuXuat);
 
