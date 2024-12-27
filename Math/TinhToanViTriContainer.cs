@@ -10,84 +10,84 @@ namespace ProjectTest.Math
 
     public class TinhToanViTriContainer : I_ViTriContainer
     {
-        public string getViTriContainer(int LoaiBay, int ViTriBay, int ViTriRow, int ViTriTier)
+        public string getContainerLocation(int typeBay, int bayLocation, int rowLocation, int tierLocation)
         {
             // viTri tạo mới để đặt container
-            string maBlock = "";
-            string ChuoiViTri = "";
+            string idBlock = "";
+            string stringLocation = "";
 
-            if (LoaiBay == 20)
+            if (typeBay == 20)
             {
-                maBlock = "A";
-                ChuoiViTri = getBayContainer20feet(ViTriBay, ViTriRow, ViTriTier);
+                idBlock = "A";
+                stringLocation = getBayContainer20feet(bayLocation, rowLocation, tierLocation);
             }
             else
             {
-                maBlock = "B";
-                ChuoiViTri = getBayContainer40feet(ViTriBay, ViTriRow, ViTriTier);
+                idBlock = "B";
+                stringLocation = getBayContainer40feet(bayLocation, rowLocation, tierLocation);
             }
 
-            ChuoiViTri = maBlock + "/" + ChuoiViTri;
-            return ChuoiViTri;
+            stringLocation = idBlock + "/" + stringLocation;
+            return stringLocation;
         }
 
-        public string getBayContainer20feet(int ViTriBay, int ViTriRow, int ViTriTier)
+        public string getBayContainer20feet(int bayLocation, int rowLocation, int tierLocation)
         {
-            string chuoi = "";
+            string stringLocation = "";
 
-            if (ViTriBay == 4 && ViTriRow == 3 && ViTriTier == 4)
+            if (bayLocation == 4 && rowLocation == 3 && tierLocation == 4)
                 return "full";
 
-            if (ViTriBay < 4)
+            if (bayLocation < 4)
             {
-                ViTriBay = ViTriBay + 1;
-                chuoi = ViTriRow + "/" + ViTriTier;
+                bayLocation = bayLocation + 1;
+                stringLocation = rowLocation + "/" + tierLocation;
             }
             else
             {
-                ViTriBay = 1;
-                chuoi = getRowTierContainer(ViTriRow, ViTriTier);
+                bayLocation = 1;
+                stringLocation = getRowTierContainer(rowLocation, tierLocation);
 
             }
-            chuoi = ViTriBay + "/" + chuoi;
-            return chuoi;
+            stringLocation = bayLocation + "/" + stringLocation;
+            return stringLocation;
         }
 
-        public string getBayContainer40feet(int ViTriBay, int ViTriRow, int ViTriTier)
+        public string getBayContainer40feet(int bayLocation, int rowLocation, int tierLocation)
         {
-            string chuoi = "";
+            string stringLocation = "";
 
-            if (ViTriBay == 2 && ViTriRow == 3 && ViTriTier == 4)
+            if (bayLocation == 2 && rowLocation == 3 && tierLocation == 4)
                 return "full";
 
-            if (ViTriBay < 2)
+            if (bayLocation < 2)
             {
-                ViTriBay = ViTriBay + 1;
-                chuoi = ViTriRow + "/" + ViTriTier;
+                bayLocation = bayLocation + 1;
+                stringLocation = rowLocation + "/" + tierLocation;
             }
             else
             {
-                ViTriBay = 1;
-                chuoi = getRowTierContainer(ViTriRow, ViTriTier);
+                bayLocation = 1;
+                stringLocation = getRowTierContainer(rowLocation, tierLocation);
 
             }
-            chuoi = ViTriBay + "/" + chuoi;
-            return chuoi;
+            stringLocation = bayLocation + "/" + stringLocation;
+            return stringLocation;
         }
 
-        public string getRowTierContainer(int ViTriRow, int ViTriTier)
+        public string getRowTierContainer(int rowLocation, int tierLocation)
         {
-            if (ViTriRow < 3)
-                ViTriRow = ViTriRow + 1;
+            if (rowLocation < 3)
+                rowLocation = rowLocation + 1;
             else
             {
-                ViTriRow = 1;
-                if (ViTriTier < 4)
-                    ViTriTier = ViTriTier + 1;
-                else ViTriTier = 1;
+                rowLocation = 1;
+                if (tierLocation < 4)
+                    tierLocation = tierLocation + 1;
+                else tierLocation = 1;
             }
-            string chuoi = ViTriRow + "/" + ViTriTier;
-            return chuoi;
+            string stringLocation = rowLocation + "/" + tierLocation;
+            return stringLocation;
         }
     }
 }

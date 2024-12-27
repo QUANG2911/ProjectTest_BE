@@ -126,7 +126,7 @@ namespace ProjectTest.Service
             TinhToanViTriContainer _toanViTriContainer = new TinhToanViTriContainer();
             var viTriMax = _context.ViTriContainers.OrderByDescending(p => p.MaViTri).FirstOrDefault();
 
-            string x = _toanViTriContainer.getViTriContainer(ContainerSize, SoBay, soRow, soTier);
+            string x = _toanViTriContainer.getContainerLocation(ContainerSize, SoBay, soRow, soTier);
 
             string[] viTriMoi = x.Split('/');
 

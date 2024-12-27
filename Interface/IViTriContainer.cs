@@ -2,7 +2,7 @@
 {
     interface I_ViTriContainer
     {
-        string getViTriContainer(int LoaiBay, int ViTriBay, int ViTriRow, int ViTriTier);
+        string getContainerLocation(int typeBay, int bayLocation, int rowLocation, int tierLocation);
 
     }
 }
