@@ -7,24 +7,24 @@ namespace ProjectTest.Models
     {
         [Key]
         [MaxLength(5)]
-        public required string MaPhieuNhap { get; set; }
+        public required string IdEntryForm { get; set; }
 
         [Required]
-        public DateTime NgayDK { get; set; }
+        public DateTime DateRegistered { get; set; }
 
-        public DateTime NgayGiaoContainer { get; set; }
+        public DateTime DateOfEntryContainer { get; set; }
 
         [Range(0, 1)]
-        public int TrangThaiDuyet { get; set; }
+        public int Status { get; set; }
 
         [MaxLength(10)]
        
         public int Id { get; set; }
 
         [MaxLength(5)]
-        public required string DonViVanChuyen { get; set; }
+        public required string TransportEntryType { get; set; }
         [MaxLength(10)]
-        public required string BienSoDonViVanChuyen { get; set; }
+        public required string TransportEntryLicense { get; set; }
 
         [ForeignKey("Id")]
         public Container? Container { get; set; }

@@ -30,16 +30,16 @@ namespace ProjectTest.Service
         {
             var thongTinCoBan = _context.Containers.Where(p => p.Id == id).First();
 
-            string loaiContainer = _context.ContainerTypes.Where(p => p.MaLoai == thongTinCoBan.MaLoai).First().TenLoai;
+            string loaiContainer = _context.ContainerTypes.Where(p => p.IdTypeContainer == thongTinCoBan.IdTypeContainer).First().NameTypeContainer;
 
             string donViXuat = "Chưa có phiếu xuất";
 
-            if (thongTinCoBan.MaPhieuXuat != null)
+            if (thongTinCoBan.IdExitForm != null)
             {
-                var exitForm = _context.ContainerExitForms.Where(p => p.MaPhieuXuat == thongTinCoBan.MaPhieuXuat).FirstOrDefault();
+                var exitForm = _context.ContainerExitForms.Where(p => p.IdExitForm == thongTinCoBan.IdExitForm).FirstOrDefault();
                 if(exitForm != null)
                 {
-                    donViXuat = exitForm.DonViVanChuyen;
+                    donViXuat = exitForm.TransportType;
                 }                
             }
             var phieuNhap = _context.ContainerEntryForms.Where(p => p.Id == id).FirstOrDefault();
@@ -47,28 +47,43 @@ namespace ProjectTest.Service
             {
                 throw new Exception("Không tồn tại phiếu nhập này");
             }
-            string donViNhap = phieuNhap.DonViVanChuyen;
+            string donViNhap = phieuNhap.TransportEntryLicense;
 
 
-            var thongTinVanChuyen = from ct_Con in _context.ContainerDetails.Where(p => p.Id == id && p.ThoiGianBatDau == dateChangeLocation)
+            var thongTinVanChuyen = from ct_Con in _context.ContainerDetails.Where(p => p.Id == id && p.TimeBegin == dateChangeLocation)
                                     from viTri in _context.ViTriContainers
-                                    where ct_Con.MaViTri == viTri.MaViTri
-                                    select new { viTri.MaBlock, viTri.SoTier, viTri.SoBay, viTri.SoRow, ct_Con.ThoiGianKetThuc, ct_Con.ThoiGianBatDau };
+                                    where ct_Con.IdLoctation == viTri.IdLoctation
+                                    select new { viTri.IdBlock, viTri.TierLocation, viTri.BayLocation, viTri.RowLocation, ct_Con.TimeEnd, ct_Con.TimeBegin };
 
             ContainerDetailDTO container = new ContainerDetailDTO
             {
                 Id = id,
-                IdContainer = thongTinCoBan.MaContainer,
+                IdContainer = thongTinCoBan.SeriContainer,
                 NumContainer = thongTinCoBan.NumContainer,
                 TypeContainer = loaiContainer,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 IsoCode = thongTinCoBan.IsoCode,
                 Size = thongTinCoBan.Size,
                 TareWeight = thongTinCoBan.TareWeight,
                 MaxWeight = thongTinCoBan.MaxWeight,
-                DateOfEntryContainer = thongTinVanChuyen.First().ThoiGianBatDau,
-                DateOfExitContainer = thongTinVanChuyen.First().ThoiGianKetThuc,
-                StatusOfContainer = thongTinCoBan.TinhTrang,
-                LocationContainer = thongTinVanChuyen.First().MaBlock + "," + thongTinVanChuyen.First().SoBay + "," + thongTinVanChuyen.First().SoTier + "," + thongTinVanChuyen.First().SoRow,
+                DateOfEntryContainer = thongTinVanChuyen.First().TimeBegin,
+                DateOfExitContainer = thongTinVanChuyen.First().TimeEnd,
+                StatusOfContainer = thongTinCoBan.ContainerStatus,
+                LocationContainer = thongTinVanChuyen.First().IdBlock + "," + thongTinVanChuyen.First().BayLocation + "," + thongTinVanChuyen.First().TierLocation + "," + thongTinVanChuyen.First().RowLocation,
                 TransportEntryType = donViNhap,
                 TransportExitType = donViXuat
             };
@@ -86,7 +101,7 @@ namespace ProjectTest.Service
 
         public ContainerEntryFormDetailDto GetInformationContainerEntryForm(string idEntryForm)
         {            
-            var detailEntryContainerForm = _context.ContainerEntryForms.Where(p => p.MaPhieuNhap == idEntryForm).FirstOrDefault();
+            var detailEntryContainerForm = _context.ContainerEntryForms.Where(p => p.IdEntryForm == idEntryForm).FirstOrDefault();
 
             if (detailEntryContainerForm == null)
             {
@@ -97,25 +112,25 @@ namespace ProjectTest.Service
             {
                 throw new Exception("container không tồn tại");
             }
-            var loaiConatiner = _context.ContainerTypes.Where(p => p.MaLoai == detailContainer.MaLoai).FirstOrDefault();
-            if(loaiConatiner == null)
+            var TypeConatiner = _context.ContainerTypes.Where(p => p.IdTypeContainer == detailContainer.IdTypeContainer).FirstOrDefault();
+            if(TypeConatiner == null)
                 throw new Exception("Hệ thống chưa tồn tại loại container này");
 
             var containerEntryFormDetailDto = new ContainerEntryFormDetailDto
             {
                 Id = detailContainer.Id,
                 IdEntryForm = idEntryForm,
-                IdContainer = detailContainer.MaContainer,
-                DateOfManufacture = detailContainer.NgaySanXuat,
+                IdContainer = detailContainer.SeriContainer,
+                DateOfManufacture = detailContainer.DateOfManufacture,
                 NumContainer = detailContainer.NumContainer,
-                TypeContainer = loaiConatiner.TenLoai,
+                TypeContainer = TypeConatiner.NameTypeContainer,
                 IsoCode = detailContainer.IsoCode,
                 Size = detailContainer.Size,
                 TareWeight = detailContainer.TareWeight,
                 MaxWeight = detailContainer.MaxWeight,
-                DateOfContainerEntry = detailEntryContainerForm.NgayGiaoContainer,
-                TransportEntryType = detailEntryContainerForm.DonViVanChuyen,
-                TransportEntryLicensePlate = detailEntryContainerForm.BienSoDonViVanChuyen
+                DateOfContainerEntry = detailEntryContainerForm.DateOfEntryContainer,
+                TransportEntryType = detailEntryContainerForm.TransportEntryType,
+                TransportEntryLicensePlate = detailEntryContainerForm.TransportEntryLicense
             };
   
             return containerEntryFormDetailDto;
@@ -124,7 +139,7 @@ namespace ProjectTest.Service
         public void CreateContainerLocation(int ContainerSize,int SoBay, int soRow, int soTier)
         {
             CaculateContainerLocation _toanViTriContainer = new CaculateContainerLocation();
-            var viTriMax = _context.ViTriContainers.OrderByDescending(p => p.MaViTri).FirstOrDefault();
+            var viTriMax = _context.ViTriContainers.OrderByDescending(p => p.IdLoctation).FirstOrDefault();
 
             string x = _toanViTriContainer.getContainerLocation(ContainerSize, SoBay, soRow, soTier);
 
@@ -134,13 +149,13 @@ namespace ProjectTest.Service
                 throw new Exception("Đã hết chỗ chứa.");
 
 
-            ViTriContainer viTri1 = new ViTriContainer
+            ContainerLocation viTri1 = new ContainerLocation
             {
-                MaBlock = viTriMoi[0],
-                SoBay = int.Parse(viTriMoi[1]),
-                SoRow = int.Parse(viTriMoi[2]),
-                SoTier = int.Parse(viTriMoi[3]),
-                TrangThaiRong = 1
+                IdBlock = viTriMoi[0],
+                BayLocation = int.Parse(viTriMoi[1]),
+                RowLocation = int.Parse(viTriMoi[2]),
+                TierLocation = int.Parse(viTriMoi[3]),
+                LocationSatus = 1
             };
             _context.ViTriContainers.Add(viTri1);
             _context.SaveChanges();
@@ -151,9 +166,9 @@ namespace ProjectTest.Service
             DetailContainer cT_Container = new DetailContainer
             {
                 Id = idContainer,
-                MaViTri = idViTri + 1,
-                ThoiGianBatDau = DateTime.Today,
-                ThoiGianKetThuc = null
+                IdLoctation = idViTri + 1,
+                TimeBegin = DateTime.Today,
+                TimeEnd = null
             };
             _context.ContainerDetails.Add(cT_Container);
             _context.SaveChanges();
@@ -163,7 +178,7 @@ namespace ProjectTest.Service
         {
             CaculateContainerLocation _toanViTriContainer = new CaculateContainerLocation();
             // ktra phieu nhap
-            var entryForm = _context.ContainerEntryForms.Where(p => p.MaPhieuNhap == idEntryForm).FirstOrDefault();
+            var entryForm = _context.ContainerEntryForms.Where(p => p.IdEntryForm == idEntryForm).FirstOrDefault();
 
             if (entryForm == null)
                 throw new Exception("Phiếu nhập không tồn tại.");
@@ -178,20 +193,20 @@ namespace ProjectTest.Service
                 int soRow = 1;
                 int soTier = 1;
                 // ktra cho chua container
-                var viTriMax = _context.ViTriContainers.OrderByDescending(p => p.MaViTri).FirstOrDefault();
+                var viTriMax = _context.ViTriContainers.OrderByDescending(p => p.IdLoctation).FirstOrDefault();
 
                 if(viTriMax != null)
                 {
-                    maViTri = viTriMax.MaViTri;
-                    soBay = viTriMax.SoBay;
-                    soRow = viTriMax.SoRow;
-                    soTier = viTriMax.SoTier;
+                    maViTri = viTriMax.IdLoctation;
+                    soBay = viTriMax.BayLocation;
+                    soRow = viTriMax.RowLocation;
+                    soTier = viTriMax.TierLocation;
                 }    
                 CreateContainerLocation(container.Size, soBay, soRow, soTier);
 
                 CreateDetailContainer(maViTri, container.Id);              
             }
-            entryForm.TrangThaiDuyet = status;
+            entryForm.Status = status;
 
             _context.SaveChanges();
             return (entryForm);
@@ -202,30 +217,30 @@ namespace ProjectTest.Service
             ///Ktra container trong Cang
             var checkContainer = _context.Containers.Where(p => p.NumContainer == numContainer).FirstOrDefault();
 
-            if (checkContainer != null && checkContainer.MaPhieuXuat != null)
+            if (checkContainer != null && checkContainer.IdExitForm != null)
             {
-                var checkPhieuXuat = _context.ContainerExitForms.Where(p => p.MaPhieuXuat == checkContainer.MaPhieuXuat).FirstOrDefault();
-                if (checkPhieuXuat != null && checkPhieuXuat.NgayXuat >= dateOfContainerEntry)
+                var checkPhieuXuat = _context.ContainerExitForms.Where(p => p.IdExitForm == checkContainer.IdExitForm).FirstOrDefault();
+                if (checkPhieuXuat != null && checkPhieuXuat.DateOfExitContainer >= dateOfContainerEntry)
                 {
                     throw new Exception("Container này hiện chưa xuất cảng, không thể làm phiếu nhập cho nó.");
                 }
             }
-            else if (checkContainer != null && checkContainer.MaPhieuXuat == null)
+            else if (checkContainer != null && checkContainer.IdExitForm == null)
             {
                 throw new Exception("Container này hiện chưa có phiếu xuất,đang tồn tại trong cảng và không thể làm phiếu nhập cho nó.");
             }
             ////////////////////////////
             Container container = new Container
             {
-                MaContainer = idContainer,
+                SeriContainer = idContainer,
                 IsoCode = isoCode,
-                MaKH = idUser,
-                MaLoai = typeContainer,
+                IdCustomer = idUser,
+                IdTypeContainer = typeContainer,
                 MaxWeight = maxWeight,
                 TareWeight = tareWeight,
                 NumContainer = numContainer,
                 Size = size,
-                NgaySanXuat = dateOfManufacture
+                DateOfManufacture = dateOfManufacture
             };
             _context.Containers.Add(container);
             _context.SaveChanges();
@@ -244,13 +259,13 @@ namespace ProjectTest.Service
             string idEntryForm = idUser + _context.ContainerEntryForms.Count();
             ContainerEntryForm entryForm = new ContainerEntryForm
             {
-                MaPhieuNhap = idEntryForm,
+                IdEntryForm = idEntryForm,
                 Id = idContainer + 1,
-                DonViVanChuyen = containerEntryFormDetailDto.TransportEntryType,
-                BienSoDonViVanChuyen = containerEntryFormDetailDto.TransportEntryLicensePlate,
-                NgayDK = DateTime.Today,
-                NgayGiaoContainer = containerEntryFormDetailDto.DateOfContainerEntry,
-                TrangThaiDuyet = 0
+                TransportEntryType = containerEntryFormDetailDto.TransportEntryType,
+                TransportEntryLicense = containerEntryFormDetailDto.TransportEntryLicensePlate,
+                DateRegistered = DateTime.Today,
+                DateOfEntryContainer = containerEntryFormDetailDto.DateOfContainerEntry,
+                Status = 0
             };
 
             _context.ContainerEntryForms.Add(entryForm);
@@ -279,23 +294,23 @@ namespace ProjectTest.Service
 
         public ContainerExitForm UpdateStatusContainerExitForm(string idExitForm, int status)
         {
-            var exitFormList = _context.ContainerExitForms.Where(p => p.MaPhieuXuat == idExitForm).FirstOrDefault();
+            var exitFormList = _context.ContainerExitForms.Where(p => p.IdExitForm == idExitForm).FirstOrDefault();
             if (exitFormList == null)
                 throw new Exception("Phiếu xuất không tồn tại.");
             
             if(status == 1)
             {
-                var containerExitList = _context.Containers.Where(p => p.MaPhieuXuat == idExitForm).ToList();
+                var containerExitList = _context.Containers.Where(p => p.IdExitForm == idExitForm).ToList();
 
                 foreach (var s in containerExitList)
                 {
-                    var ct_Xuat = _context.ContainerDetails.Where(p => p.ThoiGianKetThuc == null && p.Id == s.Id).FirstOrDefault();
+                    var ct_Xuat = _context.ContainerDetails.Where(p => p.TimeEnd == null && p.Id == s.Id).FirstOrDefault();
                     if (ct_Xuat != null)
-                        ct_Xuat.ThoiGianKetThuc = exitFormList.NgayXuat;
+                        ct_Xuat.TimeEnd = exitFormList.DateOfExitContainer;
                 }
             }
 
-            exitFormList.TrangThaiDuyet = status;
+            exitFormList.Status = status;
             _context.SaveChanges();
             return exitFormList;
         }
@@ -317,15 +332,15 @@ namespace ProjectTest.Service
 
             string ExitFormAmount = _context.ContainerExitForms.Count().ToString();
 
-            string maPhieu = idUser + ExitFormAmount;
+            string idExitForm = idUser + ExitFormAmount;
             ContainerExitForm exitForm = new ContainerExitForm
             {
-                MaPhieuXuat = maPhieu,
-                NgayLamPhieu = DateTime.Now,
-                DonViVanChuyen = containerExitFormDetailDto.TransportExitType,
-                MaSoDonViVanChuyen = containerExitFormDetailDto.TransportExitLicensePlate,
-                NgayXuat = containerExitFormDetailDto.DateOfExitContainer,
-                TrangThaiDuyet = 0
+                IdExitForm = idExitForm,
+                DateOfRegistration = DateTime.Now,
+                TransportType = containerExitFormDetailDto.TransportExitType,
+                TransportExitLincese = containerExitFormDetailDto.TransportExitLicensePlate,
+                DateOfExitContainer = containerExitFormDetailDto.DateOfExitContainer,
+                Status = 0
             };
 
             for (int i = 0; i < (listContainer.Length - 1); i++)
@@ -334,13 +349,13 @@ namespace ProjectTest.Service
                 var ct_Container = _context.ContainerDetails.Where(p => p.Id == maId).FirstOrDefault();
                 if (ct_Container != null)
                 {
-                    ct_Container.ThoiGianKetThuc = containerExitFormDetailDto.DateOfExitContainer;
+                    ct_Container.TimeEnd = containerExitFormDetailDto.DateOfExitContainer;
                 }
 
                 var container = _context.Containers.Where(p => p.Id == maId).FirstOrDefault();
                 if (container != null)
                 {
-                    container.MaPhieuXuat = maPhieu;
+                    container.IdExitForm = idExitForm;
                 }
             }
 

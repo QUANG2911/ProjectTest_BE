@@ -7,9 +7,9 @@ namespace ProjectTest.Models
     {
         [Key]
         [MaxLength(1)]
-        public required string MaLoai { get; set; }
+        public required string IdTypeContainer { get; set; }
         [MaxLength(50)]
-        public required string TenLoai { get; set; }
+        public required string NameTypeContainer { get; set; }
 
         public ICollection<Container>? Containers { get; set; }
     }

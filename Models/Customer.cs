@@ -7,14 +7,14 @@ namespace ProjectTest.Models
     {
         [Key]
         [MaxLength(3)]
-        public required string MaKH { get; set; }
+        public required string IdCustomer { get; set; }
         [MaxLength(50)]
-        public required string TenKH { get; set; }
+        public required string CustomerName { get; set; }
 
         [MaxLength(10)]
-        public required string Sdt { get; set; }
+        public required string CustomerPhone { get; set; }
         [MaxLength(13)]
-        public required string Mst { get; set; }
+        public required string TaxCode { get; set; }
 
         public ICollection<Container>? Containers { get; set; }
 

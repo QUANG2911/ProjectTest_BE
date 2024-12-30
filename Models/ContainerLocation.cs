@@ -3,21 +3,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProjectTest.Models
 {
-    public class ViTriContainer
+    public class ContainerLocation
     {
         [Key]
-        public int MaViTri { get; set; }
+        public int IdLoctation { get; set; }
         [MaxLength(1)]       
-        public string? MaBlock { get; set; }
+        public string? IdBlock { get; set; }
         [Range(0, 3)]
-        public int SoBay { get; set; }
+        public int BayLocation { get; set; }
         [Range(0, 3)]
-        public int SoRow { get; set; }
+        public int RowLocation { get; set; }
         [Range(0, 4)]
-        public int SoTier { get; set; }
+        public int TierLocation { get; set; }
 
         [Range(0, 1)]
-        public int TrangThaiRong { get; set; }
+        public int LocationSatus { get; set; }
         public ICollection<DetailContainer>? DetailContainers { get; set; }
         [ForeignKey("MaBlock")]
         public Block? Blocks { get; set; }    

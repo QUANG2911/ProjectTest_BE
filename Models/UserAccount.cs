@@ -9,16 +9,16 @@ namespace ProjectTest.Models
         public int Stt { get; set; }
         
         [MaxLength(3)]
-        public string? MaKH { get; set; }
+        public string? IdCustomer { get; set; }
         [MaxLength(3)]
-        public string? MaNv { get; set; }
-        public required string LoaiAccount { get; set; }
+        public string? IdStaff { get; set; }
+        public required string AccountType { get; set; }
 
         public required string Pass { get; set; }
         
         public required string UserName { get; set; }
 
-        [ForeignKey("MaKH")]
+        [ForeignKey("IdCustomer")]
         public Customer? Customer { get; set; }
     }
 }

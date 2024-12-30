@@ -10,20 +10,20 @@ namespace ProjectTest.Models
         public int Id { get; set; }
 
         [MaxLength(10)]
-        public required string MaContainer { get; set; }
+        public required string SeriContainer { get; set; }
 
         [MaxLength(7)]
         public required string NumContainer { get; set; }
 
         [MaxLength(1)]        
-        public string? MaLoai { get; set; }
+        public string? IdTypeContainer { get; set; }
 
         [MaxLength(3)]        
-        public string? MaKH { get; set; }
+        public string? IdCustomer { get; set; }
         [MaxLength(5)]
         public required string IsoCode { get; set; }
         [MaxLength(10)]
-        public string? MaPhieuXuat { get; set; }
+        public string? IdExitForm { get; set; }
 
         public int Size { get; set; }
 
@@ -31,16 +31,16 @@ namespace ProjectTest.Models
 
         public int TareWeight { get; set; }
 
-        public DateTime NgaySanXuat { get; set; }
+        public DateTime DateOfManufacture { get; set; }
         [MaxLength(50)]
-        public string? TinhTrang { get; set; }
+        public string? ContainerStatus { get; set; }
 
-        [ForeignKey("MaKH")]
+        [ForeignKey("IdCustomer")]
         public Customer? Customer { get; set; }
-        [ForeignKey("MaLoai")]
+        [ForeignKey("IdTypeContainer")]
         public ContainerType? ContainerType { get; set; }
 
-        [ForeignKey("MaPhieuXuat")]
+        [ForeignKey("IdExitForm")]
         public ContainerExitForm? ContainerExitForm { get; set; }
 
         public ICollection<ContainerEntryForm>? ContainerEntryForms { get; set; }
