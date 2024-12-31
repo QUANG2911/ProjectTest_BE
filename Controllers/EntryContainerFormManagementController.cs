@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectTest.DOTs;
+using ProjectTest.DTOs;
 using ProjectTest.Interface;
 using ProjectTest.Models;
 
@@ -40,7 +41,7 @@ namespace ProjectTest.Controllers
         }
 
         [HttpPost("CreateContainerEntryForm/{idUser}")]
-        public IActionResult CreateContainerEntryForm(string idUser, [FromBody] ContainerEntryFormDetailDto containerEntryFormDetailDto)
+        public IActionResult CreateContainerEntryForm(string idUser, [FromBody] CreateEntryContainerFormDto containerEntryFormDetailDto)
         {
             ContainerEntryForm entryContainerForm = _serviceContainer.CreateContainerEntryForm(idUser, containerEntryFormDetailDto);
             return Ok(entryContainerForm);

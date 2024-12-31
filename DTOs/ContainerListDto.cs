@@ -7,7 +7,6 @@ namespace ProjectTest.DOTs
     {
         public int Id { get; set; }
         public required string  IdContainer { get; set; }
-        public required string NumContainer { get; set; }
 
         public required string CustomerName { get; set; }
 

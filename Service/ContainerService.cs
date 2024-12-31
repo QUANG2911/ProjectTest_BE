@@ -59,23 +59,7 @@ namespace ProjectTest.Service
             {
                 Id = id,
                 IdContainer = thongTinCoBan.SeriContainer,
-                NumContainer = thongTinCoBan.NumContainer,
                 TypeContainer = loaiContainer,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 IsoCode = thongTinCoBan.IsoCode,
                 Size = thongTinCoBan.Size,
                 TareWeight = thongTinCoBan.TareWeight,
@@ -118,11 +102,9 @@ namespace ProjectTest.Service
 
             var containerEntryFormDetailDto = new ContainerEntryFormDetailDto
             {
-                Id = detailContainer.Id,
                 IdEntryForm = idEntryForm,
                 IdContainer = detailContainer.SeriContainer,
                 DateOfManufacture = detailContainer.DateOfManufacture,
-                NumContainer = detailContainer.NumContainer,
                 TypeContainer = TypeConatiner.NameTypeContainer,
                 IsoCode = detailContainer.IsoCode,
                 Size = detailContainer.Size,
@@ -246,11 +228,11 @@ namespace ProjectTest.Service
             _context.SaveChanges();
         }
 
-        public ContainerEntryForm CreateContainerEntryForm(string idUser, ContainerEntryFormDetailDto containerEntryFormDetailDto)
+        public ContainerEntryForm CreateContainerEntryForm(string idUser, CreateEntryContainerFormDto containerEntryFormDetailDto)
         {
             int idContainer = 0;
             var getMacontainer = _context.Containers.OrderByDescending(p => p.Id).FirstOrDefault();
-            if (getMacontainer != null) 
+            if (getMacontainer != null)
                 idContainer = getMacontainer.Id;
             string maContainer = idUser + containerEntryFormDetailDto.TypeContainer + containerEntryFormDetailDto.NumContainer;
 

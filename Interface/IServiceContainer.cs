@@ -24,7 +24,7 @@ namespace ProjectTest.Interface
 
         void CreateDetailContainer(int idViTri, int idContainer);
 
-        ContainerEntryForm CreateContainerEntryForm(string idUser, ContainerEntryFormDetailDto idEntryForm);
+        ContainerEntryForm CreateContainerEntryForm(string idUser, CreateEntryContainerFormDto idEntryForm);
 
         void CreateContainer(string idContainer, string isoCode, string idUser, string typeContainer, int maxWeight, int tareWeight, string numContainer, int size, DateTime dateOfManufacture, DateTime dateOfContainerEntry);
 

@@ -9,7 +9,6 @@
         public int Status { get; set; }
         public required string CustomerName { get; set; }
         public required string PhoneNumber { get; set; }
-        public int Id { get; set; }
 
     }
 }
