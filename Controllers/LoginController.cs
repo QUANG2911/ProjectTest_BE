@@ -9,18 +9,18 @@ namespace ProjectTest.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly I_AccountService _Icontext;
-        public LoginController(I_AccountService icontext)
+        private readonly IAccountService _accountService;
+        public LoginController(IAccountService accountService)
         {
-            _Icontext = icontext;
+            _accountService = accountService;
         }
 
-        [HttpGet("GetThongTinDangNhap/{userName}/{password}")]
-        public ActionResult GetThongTinDangNhap(string userName, string password)
+        [HttpGet("GetUserId/{userName}/{password}")]
+        public ActionResult GetUserId(string userName, string password)
         {
-            var taiKhoan = _Icontext.GetUserId(userName,password);
+            var account = _accountService.GetUserId(userName,password);
 
-            return Ok(taiKhoan);
+            return Ok(account);
         }
     }
 }

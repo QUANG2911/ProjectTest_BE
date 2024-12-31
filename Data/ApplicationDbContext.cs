@@ -14,31 +14,31 @@ namespace ProjectTest.Data
             base.OnModelCreating(modelBuilder);
 
             // Cấu hình lớp DanhSachContainerDto như một kiểu không được ánh xạ (Keyless Entity)
-            modelBuilder.Entity<DanhSachContainerDto>().HasNoKey();
-            modelBuilder.Entity<DanhSachPhieuNhapDto>().HasNoKey();
-            modelBuilder.Entity<DanhSachPhieuXuatDto>().HasNoKey();
-            modelBuilder.Entity<DanhSachContainerXuatKhoiCangDto>().HasNoKey();
-            modelBuilder.Entity<DanhSachContainerCuaKhTonDto>().HasNoKey();
+            modelBuilder.Entity<ContainerListDto>().HasNoKey();
+            modelBuilder.Entity<ContainerEntryFormListDto>().HasNoKey();
+            modelBuilder.Entity<ContainerExitFormListDto>().HasNoKey();
+            modelBuilder.Entity<ContainerListExitDto>().HasNoKey();
+            modelBuilder.Entity<ContainerListOfCustomerInSnpDto>().HasNoKey();
         }
 
 
-        public DbSet<ViTriContainer> ViTriContainers { get; set; }
+        public DbSet<ContainerLocation> ViTriContainers { get; set; }
 
-        public DbSet<Block> blocks { get; set; }
+        public DbSet<Block> Blocks { get; set; }
 
-        public DbSet<Container> containers { get; set; }
+        public DbSet<Container> Containers { get; set; }
 
-        public DbSet<CT_Container> cT_Containers { get; set; }
+        public DbSet<DetailContainer> ContainerDetails { get; set; }
 
-        public DbSet<KhachHang> khachHangs { get; set; }
+        public DbSet<Customer> Customers { get; set; }
 
-        public DbSet<LoaiContainer> loaiContainers { get; set; }
+        public DbSet<ContainerType> ContainerTypes { get; set; }
 
-        public DbSet<PhieuNhap> phieuNhaps { get; set; }
+        public DbSet<ContainerEntryForm> ContainerEntryForms { get; set; }
 
-        public DbSet<PhieuXuat> pHIEUXUATs { get; set; }
+        public DbSet<ContainerExitForm> ContainerExitForms { get; set; }
 
-        public DbSet<TaiKhoan> taiKhoans { get; set; }
+        public DbSet<UserAccount> Accounts { get; set; }
 
         public DbSet<Report> Reports { get; set; }
     }

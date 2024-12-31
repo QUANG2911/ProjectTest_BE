@@ -19,8 +19,8 @@ builder.Services.AddControllers()
     });
 
 // Tạo phụ thuộc Interface cho class để tham chiếu => cần thiết để chương trình hiểu nó phụ thuộc vào phần nào
-builder.Services.AddScoped<I_ServiceContainer, ContainerService>();
-builder.Services.AddScoped<I_AccountService, AccountService>();
+builder.Services.AddScoped<IServiceContainer, ContainerService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 
 
