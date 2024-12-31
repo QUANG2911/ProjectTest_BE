@@ -132,7 +132,7 @@ namespace ProjectTest.Service
 
 
             ContainerLocation viTri1 = new ContainerLocation
-            {
+            {//code new
                 IdBlock = viTriMoi[0],
                 BayLocation = int.Parse(viTriMoi[1]),
                 RowLocation = int.Parse(viTriMoi[2]),
