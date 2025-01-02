@@ -20,23 +20,23 @@ namespace ProjectTest.Service
         //***********************************Container******************************************
         public async Task<List<ContainerListDto>> GetContainerListAsync()
         {
-            var dsCcontainers = await _context.Set<ContainerListDto>()
+            var ContainerLists = await _context.Set<ContainerListDto>()
                                         .FromSqlRaw("select * from DanhSachConTainerOCang") // view
                                         .ToListAsync();
-            return dsCcontainers;
+            return ContainerLists;
         }
 
         public ContainerDetailDTO GetInformationContainer(int id, DateTime dateChangeLocation)
         {
-            var thongTinCoBan = _context.Containers.Where(p => p.Id == id).First();
+            var detailContainer = _context.Containers.Where(p => p.Id == id).First();
 
-            string loaiContainer = _context.ContainerTypes.Where(p => p.IdTypeContainer == thongTinCoBan.IdTypeContainer).First().NameTypeContainer;
+            string typeContainer = _context.ContainerTypes.Where(p => p.IdTypeContainer == detailContainer.IdTypeContainer).First().NameTypeContainer;
 
             string donViXuat = "Chưa có phiếu xuất";
 
-            if (thongTinCoBan.IdExitForm != null)
+            if (detailContainer.IdExitForm != null)
             {
-                var exitForm = _context.ContainerExitForms.Where(p => p.IdExitForm == thongTinCoBan.IdExitForm).FirstOrDefault();
+                var exitForm = _context.ContainerExitForms.Where(p => p.IdExitForm == detailContainer.IdExitForm).FirstOrDefault();
                 if(exitForm != null)
                 {
                     donViXuat = exitForm.TransportType;
@@ -50,7 +50,7 @@ namespace ProjectTest.Service
             string donViNhap = phieuNhap.TransportEntryLicense;
 
 
-            var thongTinVanChuyen = from ct_Con in _context.ContainerDetails.Where(p => p.Id == id && p.TimeBegin == dateChangeLocation)
+            var detailTransport = from ct_Con in _context.ContainerDetails.Where(p => p.Id == id && p.TimeBegin == dateChangeLocation)
                                     from viTri in _context.ViTriContainers
                                     where ct_Con.IdLoctation == viTri.IdLoctation
                                     select new { viTri.IdBlock, viTri.TierLocation, viTri.BayLocation, viTri.RowLocation, ct_Con.TimeEnd, ct_Con.TimeBegin };
@@ -58,16 +58,16 @@ namespace ProjectTest.Service
             ContainerDetailDTO container = new ContainerDetailDTO
             {
                 Id = id,
-                IdContainer = thongTinCoBan.SeriContainer,
-                TypeContainer = loaiContainer,
-                IsoCode = thongTinCoBan.IsoCode,
-                Size = thongTinCoBan.Size,
-                TareWeight = thongTinCoBan.TareWeight,
-                MaxWeight = thongTinCoBan.MaxWeight,
-                DateOfEntryContainer = thongTinVanChuyen.First().TimeBegin,
-                DateOfExitContainer = thongTinVanChuyen.First().TimeEnd,
-                StatusOfContainer = thongTinCoBan.ContainerStatus,
-                LocationContainer = thongTinVanChuyen.First().IdBlock + "," + thongTinVanChuyen.First().BayLocation + "," + thongTinVanChuyen.First().TierLocation + "," + thongTinVanChuyen.First().RowLocation,
+                IdContainer = detailContainer.SeriContainer,
+                TypeContainer = typeContainer,
+                IsoCode = detailContainer.IsoCode,
+                Size = detailContainer.Size,
+                TareWeight = detailContainer.TareWeight,
+                MaxWeight = detailContainer.MaxWeight,
+                DateOfEntryContainer = detailTransport.First().TimeBegin,
+                DateOfExitContainer = detailTransport.First().TimeEnd,
+                StatusOfContainer = detailContainer.ContainerStatus,
+                LocationContainer = detailTransport.First().IdBlock + "," + detailTransport.First().BayLocation + "," + detailTransport.First().TierLocation + "," + detailTransport.First().RowLocation,
                 TransportEntryType = donViNhap,
                 TransportExitType = donViXuat
             };
@@ -77,10 +77,10 @@ namespace ProjectTest.Service
         //***********************************PhieuNhap******************************************
         public async Task<List<ContainerEntryFormListDto>> GetContainerEntryFormList(string idUser)
         {
-            var danhSachPhieuNhap = await _context.Set<ContainerEntryFormListDto>()
+            var entryContainerFormLists = await _context.Set<ContainerEntryFormListDto>()
                                    .FromSqlRaw("exec DANHSACHPHIEUNHAP @maUser = {0}", idUser)
                                    .ToListAsync();
-            return danhSachPhieuNhap;
+            return entryContainerFormLists;
         }
 
         public ContainerEntryFormDetailDto GetInformationContainerEntryForm(string idEntryForm)
@@ -118,28 +118,28 @@ namespace ProjectTest.Service
             return containerEntryFormDetailDto;
         }
 
-        public void CreateContainerLocation(int ContainerSize,int SoBay, int soRow, int soTier)
+        public void CreateContainerLocation(int ContainerSize,int BayLocation, int RowLocation, int TierLocation)
         {
-            CaculateContainerLocation _toanViTriContainer = new CaculateContainerLocation();
-            var viTriMax = _context.ViTriContainers.OrderByDescending(p => p.IdLoctation).FirstOrDefault();
+            CaculateContainerLocation caculateContainerLocation = new CaculateContainerLocation();
+            //var maxLocation = _context.ViTriContainers.OrderByDescending(p => p.IdLoctation).FirstOrDefault();
 
-            string x = _toanViTriContainer.getContainerLocation(ContainerSize, SoBay, soRow, soTier);
+            string x = caculateContainerLocation.getContainerLocation(ContainerSize, BayLocation, RowLocation, TierLocation);
 
-            string[] viTriMoi = x.Split('/');
+            string[] newLocation = x.Split('/');
 
-            if (viTriMoi[0] == "full")
+            if (newLocation[0] == "full")
                 throw new Exception("Đã hết chỗ chứa.");
 
 
-            ContainerLocation viTri1 = new ContainerLocation
+            ContainerLocation location = new ContainerLocation
             {//code new
-                IdBlock = viTriMoi[0],
-                BayLocation = int.Parse(viTriMoi[1]),
-                RowLocation = int.Parse(viTriMoi[2]),
-                TierLocation = int.Parse(viTriMoi[3]),
+                IdBlock = newLocation[0],
+                BayLocation = int.Parse(newLocation[1]),
+                RowLocation = int.Parse(newLocation[2]),
+                TierLocation = int.Parse(newLocation[3]),
                 LocationSatus = 1
             };
-            _context.ViTriContainers.Add(viTri1);
+            _context.ViTriContainers.Add(location);
             _context.SaveChanges();
         }
 
@@ -158,7 +158,6 @@ namespace ProjectTest.Service
 
         public ContainerEntryForm UpdateStatusContainerEntryForm(string idEntryForm, int status)
         {
-            CaculateContainerLocation _toanViTriContainer = new CaculateContainerLocation();
             // ktra phieu nhap
             var entryForm = _context.ContainerEntryForms.Where(p => p.IdEntryForm == idEntryForm).FirstOrDefault();
 
@@ -170,23 +169,23 @@ namespace ProjectTest.Service
                 throw new Exception("Container không tồn tại.");
             if (status == 1)
             {
-                int maViTri = 0;
-                int soBay = 0;
-                int soRow = 1;
-                int soTier = 1;
+                int idLocation = 0;
+                int BayLocation = 0;
+                int RowLocation = 1;
+                int TierLocation = 1;
                 // ktra cho chua container
-                var viTriMax = _context.ViTriContainers.OrderByDescending(p => p.IdLoctation).FirstOrDefault();
+                var maxLocation = _context.ViTriContainers.OrderByDescending(p => p.IdLoctation).FirstOrDefault();
 
-                if(viTriMax != null)
+                if(maxLocation != null)
                 {
-                    maViTri = viTriMax.IdLoctation;
-                    soBay = viTriMax.BayLocation;
-                    soRow = viTriMax.RowLocation;
-                    soTier = viTriMax.TierLocation;
+                    idLocation = maxLocation.IdLoctation;
+                    BayLocation = maxLocation.BayLocation;
+                    RowLocation = maxLocation.RowLocation;
+                    TierLocation = maxLocation.TierLocation;
                 }    
-                CreateContainerLocation(container.Size, soBay, soRow, soTier);
+                CreateContainerLocation(container.Size, BayLocation, RowLocation, TierLocation);
 
-                CreateDetailContainer(maViTri, container.Id);              
+                CreateDetailContainer(idLocation, container.Id);              
             }
             entryForm.Status = status;
 
