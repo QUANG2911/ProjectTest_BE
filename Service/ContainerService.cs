@@ -51,7 +51,7 @@ namespace ProjectTest.Service
 
 
             var detailTransport = from ct_Con in _context.ContainerDetails.Where(p => p.Id == id && p.TimeBegin == dateChangeLocation)
-                                    from viTri in _context.ViTriContainers
+                                    from viTri in _context.ContainerLocations
                                     where ct_Con.IdLoctation == viTri.IdLoctation
                                     select new { viTri.IdBlock, viTri.TierLocation, viTri.BayLocation, viTri.RowLocation, ct_Con.TimeEnd, ct_Con.TimeBegin };
 
@@ -139,7 +139,7 @@ namespace ProjectTest.Service
                 TierLocation = int.Parse(newLocation[3]),
                 LocationSatus = 1
             };
-            _context.ViTriContainers.Add(location);
+            _context.ContainerLocations.Add(location);
             _context.SaveChanges();
         }
 
@@ -174,7 +174,7 @@ namespace ProjectTest.Service
                 int RowLocation = 1;
                 int TierLocation = 1;
                 // ktra cho chua container
-                var maxLocation = _context.ViTriContainers.OrderByDescending(p => p.IdLoctation).FirstOrDefault();
+                var maxLocation = _context.ContainerLocations.OrderByDescending(p => p.IdLoctation).FirstOrDefault();
 
                 if(maxLocation != null)
                 {

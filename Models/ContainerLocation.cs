@@ -19,7 +19,7 @@ namespace ProjectTest.Models
         [Range(0, 1)]
         public int LocationSatus { get; set; }
         public ICollection<DetailContainer>? DetailContainers { get; set; }
-        [ForeignKey("MaBlock")]
+        [ForeignKey("IdBlock")]
         public Block? Blocks { get; set; }    
     }
 }

@@ -22,7 +22,7 @@ namespace ProjectTest.Data
         }
 
 
-        public DbSet<ContainerLocation> ViTriContainers { get; set; }
+        public DbSet<ContainerLocation> ContainerLocations { get; set; }
 
         public DbSet<Block> Blocks { get; set; }
 
